@@ -3,535 +3,720 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CFO AI — Dashboard de Prospectos</title>
+  <title>CFO AI — Prospectos Guatemala</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green: #0d4f3c;
-      --green-light: #e6f0ec;
-      --green-mid: #1a6b52;
-      --accent: #f0b429;
-      --bg: #f8f7f4;
-      --card: #ffffff;
-      --text: #1a1a1a;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --tag-bg: #e6f0ec;
-      --tag-text: #0d4f3c;
-      --pending: #fef3c7;
-      --pending-text: #92400e;
-      --contacted: #d1fae5;
-      --contacted-text: #065f46;
-      --nofit: #fee2e2;
-      --nofit-text: #991b1b;
+      --verde: #0d4f3c;
+      --verde-claro: #e8f5f0;
+      --verde-medio: #1a6b52;
+      --dorado: #c9a84c;
+      --gris-bg: #f7f7f5;
+      --gris-borde: #e2e2de;
+      --gris-texto: #6b6b68;
+      --rojo: #c0392b;
+      --azul: #2563eb;
     }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--gris-bg);
+      color: #1a1a18;
       min-height: 100vh;
     }
 
-    header {
-      background: var(--green);
-      color: #fff;
-      padding: 28px 40px 24px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+    /* HEADER */
+    .header {
+      background: var(--verde);
+      color: white;
+      padding: 2.5rem 2rem 2rem;
     }
-    .header-brand { display: flex; flex-direction: column; gap: 4px; }
-    .header-brand .logo-line {
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.5rem;
+    }
+    .header h1 {
       font-family: 'Instrument Serif', serif;
-      font-size: 28px;
-      letter-spacing: -0.3px;
-      color: #fff;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
     }
-    .header-brand .tagline {
-      font-size: 13px;
+    .header-subtitle {
+      font-size: 0.875rem;
       color: rgba(255,255,255,0.65);
       font-weight: 400;
     }
-    .header-meta {
-      text-align: right;
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-    }
-    .header-meta strong {
-      display: block;
-      font-size: 22px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
 
+    /* STATS BAR */
     .stats-bar {
-      background: var(--green-mid);
-      padding: 12px 40px;
+      background: white;
+      border-bottom: 1px solid var(--gris-borde);
+      padding: 1rem 2rem;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
-      gap: 32px;
+      gap: 2.5rem;
+      align-items: center;
       flex-wrap: wrap;
     }
-    .stat { display: flex; flex-direction: column; gap: 2px; }
-    .stat-value { font-size: 18px; font-weight: 700; color: #fff; }
-    .stat-label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; }
-
-    main { max-width: 1280px; margin: 0 auto; padding: 32px 40px; }
-
-    .filters-section { margin-bottom: 28px; }
-    .filters-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
-    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-    .pill {
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      background: var(--card);
-      color: var(--muted);
-      transition: all 0.15s;
-      user-select: none;
-    }
-    .pill:hover { border-color: var(--green); color: var(--green); }
-    .pill.active { background: var(--green); color: #fff; border-color: var(--green); }
-
-    .search-row { display: flex; gap: 12px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
-    .search-input {
-      flex: 1; min-width: 220px;
-      padding: 9px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      background: #fff;
-      transition: border-color 0.15s;
-    }
-    .search-input:focus { border-color: var(--green); }
-    .results-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
-
-    .prospects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 20px;
-    }
-
-    .prospect-card {
-      background: var(--card);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: box-shadow 0.2s, transform 0.15s;
+    .stat {
       display: flex;
       flex-direction: column;
+      gap: 0.15rem;
     }
-    .prospect-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
-
-    .card-header {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .card-header-left { flex: 1; min-width: 0; }
-    .empresa-name {
-      font-size: 15px;
+    .stat-num {
+      font-size: 1.5rem;
       font-weight: 700;
-      color: var(--green);
-      line-height: 1.3;
-      margin-bottom: 4px;
-      word-break: break-word;
+      color: var(--verde);
+      line-height: 1;
     }
-    .sector-tag {
-      display: inline-block;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-    .status-badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .status-Pendiente { background: var(--pending); color: var(--pending-text); }
-    .status-Contactado { background: var(--contacted); color: var(--contacted-text); }
-    .status-NoFit { background: var(--nofit); color: var(--nofit-text); }
-
-    .card-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
-    .card-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-    .card-desc { font-size: 13px; color: #374151; line-height: 1.5; }
-    .fit-text {
-      font-size: 13px;
-      color: var(--green);
+    .stat-label {
+      font-size: 0.7rem;
       font-weight: 500;
-      line-height: 1.5;
-      padding: 8px 10px;
-      background: var(--green-light);
-      border-radius: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gris-texto);
     }
-    .contact-block { display: flex; flex-direction: column; gap: 4px; }
-    .contact-name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .contact-cargo { font-size: 12px; color: var(--muted); }
-    .contact-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-    .contact-link {
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--gris-borde);
+    }
+    .last-update {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: var(--gris-texto);
+    }
+
+    /* MAIN */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+    }
+
+    /* FILTERS */
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+      align-items: center;
+    }
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gris-texto);
+      margin-right: 0.25rem;
+    }
+    .filter-pill {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--gris-borde);
+      background: white;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #444;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-pill:hover { border-color: var(--verde-medio); color: var(--verde-medio); }
+    .filter-pill.active {
+      background: var(--verde);
+      border-color: var(--verde);
+      color: white;
+    }
+
+    /* SEARCH */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gris-texto);
+      font-size: 0.9rem;
+    }
+    #search {
+      width: 100%;
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #search:focus { border-color: var(--verde-medio); }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* CARD */
+    .card {
+      background: white;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(13,79,60,0.1);
+      transform: translateY(-2px);
+    }
+    .card-header {
+      padding: 1.25rem 1.25rem 0.9rem;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    .card-meta {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .badge-sector {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: var(--verde-claro);
+      color: var(--verde);
+    }
+    .badge-fecha {
+      font-size: 0.65rem;
+      color: var(--gris-texto);
+      font-weight: 400;
+    }
+    .card h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #1a1a18;
+      line-height: 1.3;
+    }
+    .card-body {
+      padding: 1rem 1.25rem;
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 0.9rem;
+    }
+    .fit-box {
+      background: var(--verde-claro);
+      border-left: 3px solid var(--verde);
+      border-radius: 0 6px 6px 0;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.78rem;
+      color: var(--verde-medio);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .fit-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--verde);
+      margin-bottom: 0.2rem;
+    }
+
+    /* DECISOR */
+    .decisor-block {
+      padding: 0.75rem;
+      background: #fafaf8;
+      border: 1px solid var(--gris-borde);
+      border-radius: 8px;
+      margin-bottom: 0.9rem;
+    }
+    .decisor-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gris-texto);
+      margin-bottom: 0.4rem;
+    }
+    .decisor-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a1a18;
+    }
+    .decisor-cargo {
+      font-size: 0.76rem;
+      color: var(--gris-texto);
+      margin-top: 0.1rem;
+    }
+    .decisor-links {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .link-btn {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      font-size: 0.7rem;
       font-weight: 500;
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid;
       text-decoration: none;
-      transition: background 0.15s;
+      transition: all 0.15s;
     }
-    .link-linkedin { color: #0a66c2; border-color: #0a66c2; }
-    .link-linkedin:hover { background: #e8f0fe; }
-    .link-email { color: var(--green); border-color: var(--green); }
-    .link-email:hover { background: var(--green-light); }
-    .link-na { color: var(--muted); border-color: var(--border); cursor: default; font-style: italic; }
-
-    .mensaje-block {
-      background: #f9fafb;
-      border-left: 3px solid var(--accent);
-      border-radius: 0 6px 6px 0;
-      padding: 10px 14px;
+    .link-linkedin {
+      background: #e8f0fe;
+      color: #1d4ed8;
     }
-    .mensaje-text {
-      font-size: 12.5px;
-      color: #374151;
-      line-height: 1.6;
+    .link-linkedin:hover { background: #1d4ed8; color: white; }
+    .link-web {
+      background: #f0f0ee;
+      color: #555;
+    }
+    .link-web:hover { background: #555; color: white; }
+    .no-link {
+      font-size: 0.7rem;
+      color: #aaa;
       font-style: italic;
     }
-    .copy-btn {
-      margin-top: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--green);
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
-    .copy-btn:hover { text-decoration: underline; }
 
-    .card-footer {
-      padding: 10px 20px;
-      border-top: 1px solid var(--border);
+    /* MENSAJE */
+    .mensaje-block {
+      margin-top: 0.75rem;
+    }
+    .mensaje-toggle {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--verde-medio);
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 0.4rem;
     }
-    .card-date { font-size: 11px; color: var(--muted); }
+    .mensaje-text {
+      display: none;
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: #333;
+      background: #f7f7f5;
+      border: 1px solid var(--gris-borde);
+      border-radius: 7px;
+      padding: 0.7rem 0.85rem;
+      position: relative;
+    }
+    .mensaje-text.open { display: block; }
+    .copy-btn {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.5rem;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    .copy-btn:hover { background: var(--verde-medio); }
 
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
+    /* ESTADO */
+    .estado-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1.25rem;
+      border-top: 1px solid var(--gris-borde);
+      background: #fafaf8;
+    }
+    .estado-badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .estado-Pendiente { background: #fef3c7; color: #92400e; }
+    .estado-Contactado { background: #d1fae5; color: #065f46; }
+    .estado-NoFit { background: #fee2e2; color: #991b1b; }
+    .estado-Meeting { background: #dbeafe; color: #1e40af; }
+    .estado-default { background: #f3f4f6; color: #374151; }
+    .card-date-small {
+      font-size: 0.68rem;
+      color: var(--gris-texto);
+    }
+
+    /* EMPTY */
+    .empty {
       grid-column: 1 / -1;
-    }
-    .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-state p { font-size: 14px; }
-
-    footer {
       text-align: center;
-      padding: 28px;
-      font-size: 12px;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
+      padding: 4rem 2rem;
+      color: var(--gris-texto);
     }
-    footer a { color: var(--green); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    .empty h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
 
-    @media (max-width: 640px) {
-      header { padding: 20px; }
-      .stats-bar { padding: 12px 20px; gap: 20px; }
-      main { padding: 20px; }
-      .prospects-grid { grid-template-columns: 1fr; }
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      color: var(--gris-texto);
+      border-top: 1px solid var(--gris-borde);
+      background: white;
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 1.75rem 1rem 1.5rem; }
+      .stats-inner { gap: 1.25rem; }
+      .main { padding: 1.25rem 1rem 3rem; }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-brand">
-    <div class="logo-line">CFO AI — Prospectos Guatemala</div>
-    <div class="tagline">Prospección B2B · Empresas guatemaltecas · Actualizado automáticamente</div>
-  </div>
-  <div class="header-meta">
-    <strong id="total-count">—</strong>
-    prospectos totales · Última actualización: <strong id="last-update">12 mayo 2026</strong>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-label">CFO AI · Prospección B2B Guatemala</div>
+    <h1>Pipeline de Prospectos</h1>
+    <p class="header-subtitle">Empresas guatemaltecas calificadas · 50-500 empleados · Productos físicos</p>
   </div>
 </header>
 
 <div class="stats-bar">
-  <div class="stat"><div class="stat-value" id="stat-pendiente">—</div><div class="stat-label">Pendientes</div></div>
-  <div class="stat"><div class="stat-value" id="stat-contactado">—</div><div class="stat-label">Contactados</div></div>
-  <div class="stat"><div class="stat-value" id="stat-nofit">—</div><div class="stat-label">No Fit</div></div>
-  <div class="stat"><div class="stat-value" id="stat-linkedin">—</div><div class="stat-label">Con LinkedIn</div></div>
+  <div class="stats-inner">
+    <div class="stat">
+      <span class="stat-num" id="count-total">0</span>
+      <span class="stat-label">Prospectos</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num" id="count-pendiente">0</span>
+      <span class="stat-label">Pendientes</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num" id="count-contactado">0</span>
+      <span class="stat-label">Contactados</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num" id="count-meeting">0</span>
+      <span class="stat-label">En Meeting</span>
+    </div>
+    <div class="last-update">Actualizado: <strong id="last-update">13 mayo 2026</strong></div>
+  </div>
 </div>
 
-<main>
-  <div class="filters-section">
-    <div class="filters-label">Filtrar por industria</div>
-    <div class="filter-pills" id="sector-pills">
-      <div class="pill active" data-sector="all">Todos</div>
-    </div>
-    <div class="filter-pills" id="status-pills">
-      <div class="pill active" data-status="all">Todos los estados</div>
-      <div class="pill" data-status="Pendiente">Pendiente</div>
-      <div class="pill" data-status="Contactado">Contactado</div>
-      <div class="pill" data-status="NoFit">No Fit</div>
-    </div>
+<main class="main">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Buscar empresa, sector, decisor…" />
   </div>
 
-  <div class="search-row">
-    <input class="search-input" type="text" id="search-input" placeholder="Buscar empresa, decisor, sector..." />
-    <span class="results-count" id="results-count"></span>
+  <div class="filters" id="filters">
+    <span class="filter-label">Sector:</span>
+    <button class="filter-pill active" data-filter="all">Todos</button>
   </div>
 
-  <div class="prospects-grid" id="prospects-grid"></div>
+  <div class="grid" id="grid"></div>
 </main>
 
-<footer>
-  Generado por <strong>CFO AI Lead Hunter</strong> · <a href="https://cfoai.solutions/" target="_blank">cfoai.solutions</a> · Dashboard actualizado automáticamente cada día
+<footer class="footer">
+  CFO AI · Dashboard de Prospección · Guatemala · <a href="https://cfoai.solutions/" style="color:var(--verde);text-decoration:none;" target="_blank">cfoai.solutions</a>
 </footer>
 
 <script>
 const PROSPECTS = [
-  { fecha:"2026-05-08", empresa:"Absortex, S.A. (ABX)", sector:"Farmacéutica / Higiene", desc:"Fabricante guatemalteco de productos farmacéuticos e higiene personal.", fit:"Empresa productora de bienes físicos, mercado nacional, tamaño mediano.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"INGUAMASA / Mayan Gold Macadamia", sector:"Agroindustria", desc:"Procesadora y exportadora de nuez de macadamia guatemalteca bajo la marca Mayan Gold.", fit:"Agroindustria exportadora con producto de alto valor, ciclos estacionales.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Industrias ODI, S.A.", sector:"Agroindustria / Alimentos", desc:"Empresa agroindustrial guatemalteca de alimentos procesados.", fit:"Productos físicos, mercado nacional e internacional, estructura mediana.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Agroindustrias Albay, S.A.", sector:"Agroindustria / Granos", desc:"Procesadora de granos y productos agroindustriales en Guatemala.", fit:"Empresa nacional, productos físicos, flujo de caja estacional por cosechas.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Laboratorios Bonin, S.A.", sector:"Farmacéutica", desc:"Laboratorio farmacéutico guatemalteco con producción de medicamentos.", fit:"Empresa productora nacional, múltiples SKUs, clientes distribuidores.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"INFASA (Industria Farmacéutica, S.A.)", sector:"Farmacéutica", desc:"Fabricante guatemalteco de productos farmacéuticos.", fit:"Empresa productora nacional establecida, múltiples líneas de producto.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Laboratorio Therfam, S.A.", sector:"Farmacéutica", desc:"Laboratorio farmacéutico con producción para mercado guatemalteco y regional.", fit:"Empresa productora, exportación regional, estructura mediana.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Donovan Werke S.A.", sector:"Farmacéutica", desc:"Laboratorio farmacéutico con planta de 40,000 m², 350+ empleados, fundado en 1978.", fit:"Empresa mediana-grande con producción a escala, múltiples líneas, exportación regional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Farcensa", sector:"Farmacéutica", desc:"Empresa farmacéutica guatemalteca con 40+ años de operación.", fit:"Historia consolidada, red de distribución nacional, clientes B2B y retail.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Droguería Landívar / Land Gruppe", sector:"Farmacéutica", desc:"Empresa farmacéutica con 50+ años, certificada con Norma 32 OMS.", fit:"Empresa familiar consolidada, distribución a farmacias y hospitales.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Prefabricados CIFA", sector:"Construcción", desc:"Fabricante de elementos prefabricados de concreto. ~250 empleados, fundada 1957, 3ra generación.", fit:"Empresa familiar 3ra generación, ~250 empleados, múltiples proyectos simultáneos.", decisor:"Arturo Paiz", cargo:"CEO", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Macizo / FFACSA", sector:"Construcción", desc:"Empresa de materiales de construcción con 8+ plantas en Guatemala.", fit:"Red de distribución amplia, múltiples plantas, gestión financiera compleja.", decisor:"Luis Antonio Caná", cargo:"CEO", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"PROMACOSA", sector:"Construcción / Materiales", desc:"Empresa de materiales de construcción fundada en 1987, planta + 5 salas de venta.", fit:"Red de ventas múltiple, empresa productora nacional establecida.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-08", empresa:"Famaconsa", sector:"Construcción / Materiales", desc:"Fabricante de materiales de construcción con 2 plantas (Chiquimula + Zacapa).", fit:"Dos plantas de producción, operación regional, empresa establecida 25+ años.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-09", empresa:"Polindustrias, S.A.", sector:"Manufactura / Plásticos", desc:"Fabricante guatemalteco de productos plásticos industriales.", fit:"Empresa productora nacional, múltiples SKUs de plásticos, clientes B2B.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-09", empresa:"PPA (Procesos y Productos Alimenticios)", sector:"Alimentos Procesados", desc:"Empresa guatemalteca de alimentos procesados para mercado nacional.", fit:"Múltiples líneas de producto, clientes distribuidores, estructura mediana.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-09", empresa:"Grupo Penva", sector:"Bebidas / Manufactura", desc:"Empresa guatemalteca de bebidas y manufactura.", fit:"Empresa productora nacional, distribución amplia, flujo de caja por temporadas.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-09", empresa:"Grupo Econsa / PROQUIMA", sector:"Ingredientes Alimentarios", desc:"Empresa guatemalteca de ingredientes y preparaciones para la industria alimentaria.", fit:"Clientes B2B industriales, múltiples productos, empresa nacional establecida.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-09", empresa:"Lignum, S.A.", sector:"Madera / Construcción", desc:"Empresa guatemalteca de productos de madera y construcción.", fit:"Productos físicos, exportación potencial, empresa nacional con inventario de madera.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-10", empresa:"Central America Textiles (Iris Textiles)", sector:"Textil / Manufactura", desc:"Empresa guatemalteca de manufactura textil para mercado local e internacional.", fit:"Múltiples líneas de tela, clientes exportación, estructura mediana.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-10", empresa:"Fábrica El Zeppelin S.A.", sector:"Textil / Retail", desc:"Fabricante guatemalteco de ropa y productos textiles para retail.", fit:"Marca propia + producción para terceros, SKUs múltiples, red distribución local.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-10", empresa:"Elim S.A.", sector:"Textil / Maquila", desc:"Empresa de maquila textil guatemalteca para marcas internacionales.", fit:"Contratos B2B internacionales, cobros en dólares, gestión de órdenes de compra.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-10", empresa:"Garesa S.A.", sector:"Distribución / Alimentos", desc:"Distribuidora guatemalteca de alimentos para mercado nacional.", fit:"Red de distribución múltiple, múltiples clientes y proveedores, flujo caja complejo.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-10", empresa:"Ninoshka S.A.", sector:"Distribución / Consumo Masivo", desc:"Empresa de distribución de productos de consumo masivo en Guatemala.", fit:"Operación distribuidora con múltiples clientes, inventario rotativo, estructura mediana.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"Best Melamine (American Best Melamine, S.A.)", sector:"Manufactura / Vajillas Melamina", desc:"Fabricante guatemalteco de vajillas y utensilios de melamina para el mercado regional.", fit:"Múltiples SKUs de vajillas, exportación regional, empresa familiar establecida.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"Plastimax, S.A.", sector:"Manufactura / Envases Plásticos", desc:"Fabricante guatemalteco de envases plásticos para la industria alimentaria y farmacéutica.", fit:"Clientes B2B industriales, múltiples formatos de envase, empresa nacional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"Hogartexsa (Hogartex S.A.)", sector:"Manufactura / Textiles Hogar", desc:"Fabricante guatemalteco de textiles para el hogar (sábanas, toallas, manteles).", fit:"Múltiples SKUs de textiles, clientes retail y corporativos, empresa nacional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"INDUPLASTIC (Industrias Plásticas de Guatemala, S.A.)", sector:"Manufactura / Plásticos", desc:"Fabricante de productos plásticos para el hogar y uso industrial.", fit:"Amplio catálogo de productos plásticos, clientes B2B y retail, empresa nacional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"Jabones Las Palmas (Grupo MEME)", sector:"Manufactura / Jabones y Detergentes", desc:"Fabricante guatemalteco de jabones y detergentes bajo el Grupo MEME.", fit:"Múltiples líneas de higiene del hogar, distribución nacional, empresa familiar.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-11", empresa:"ARMAGUA (Arandelas y Mallas de Guatemala)", sector:"Manufactura / Metalmecánica", desc:"Fabricante guatemalteco de mallas y arandelas metálicas para la construcción e industria.", fit:"Productos industriales B2B, clientes construcción y manufactura, empresa nacional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Tostaduría de Café León", sector:"Alimentos y Bebidas / Café", desc:"Tostadora y procesadora de café guatemalteco para mercado nacional e internacional.", fit:"Empresa de café con ciclos estacionales, cobros de exportación, múltiples clientes.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Agroindustria Legumex / Tierra Fría", sector:"Agroindustria / Vegetales", desc:"Empresa agroindustrial guatemalteca de vegetales procesados bajo marca Tierra Fría.", fit:"Procesamiento de vegetales, exportación, ciclos estacionales de cosecha.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Chocolates Granada (Lorenesi y Cía.)", sector:"Alimentos y Bebidas / Chocolates", desc:"Fabricante guatemalteco de chocolates artesanales e industriales. Marca Granada.", fit:"Empresa familiar con múltiples líneas de chocolate, distribución nacional.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"FRUTESA (Frutas Tropicales de Guatemala)", sector:"Agroindustria / Frutas", desc:"Empresa de procesamiento y exportación de frutas tropicales guatemaltecas.", fit:"Exportación con ciclos estacionales, cobros internacionales, cadena de frío.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Guatemala Real Café", sector:"Agroindustria / Café", desc:"Procesadora y exportadora de café premium guatemalteco.", fit:"Exportación de café con precio volátil internacional, cobros en dólares.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Embutidos Bremen / CAPSA", sector:"Alimentos y Bebidas / Embutidos", desc:"Fabricante guatemalteco de embutidos y carnes procesadas bajo marca Bremen.", fit:"Múltiples SKUs perecederos, distribución nacional, clientes retail y food service.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Alimentos Montesol S.A.", sector:"Alimentos y Bebidas", desc:"Empresa guatemalteca de alimentos procesados para el mercado nacional.", fit:"Múltiples líneas de producto, distribución nacional, empresa mediana establecida.", decisor:"—", cargo:"—", linkedin:"", email:"", mensaje:"", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Industrias Rick's, S.A.", sector:"Alimentos y Bebidas / Snacks", desc:"Fabricante de snacks (chicharrones, chips de malanga, palomitas, yuca). Marca propia + private label para Walmart. Exporta a C.A., México, EE.UU., Caribe. ISO 9001, ISO 22000, SQF.", fit:"Múltiples SKUs con márgenes distintos (marca propia vs private label vs exportación). Flujo complejo. 51-200 emp, 44 años.", decisor:"Byron Alquijay", cargo:"Gerente General / President", linkedin:"https://www.linkedin.com/in/byronalquijay/", email:"", mensaje:"Byron, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para empresas como Rick's — donde manejás marca propia, private label y exportación al mismo tiempo. Saber en tiempo real qué línea te deja más margen puede cambiar cómo priorizás producción. ¿Me darías 30 mins para mostrarte cómo funciona?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Guandy (Guatemalan Candies, S.A.)", sector:"Alimentos y Bebidas / Confitería", desc:"Fabricante de marshmallows, gomitas, chocolates y dulces suaves. Exporta a 45 países en 5 continentes. Proveedor de Walmart México. Retail + granel + private label.", fit:"Exportación a 45 países + cobros multi-divisa + concentración posible en Walmart. Empresa familiar ~1988.", decisor:"Gerardo Araneda", cargo:"Director General | Pte. Gremial Dulces CIG", linkedin:"https://gt.linkedin.com/company/guatemalan-candies-s-a-guandy", email:"", mensaje:"Gerardo, te escribo porque tengo un servicio de inteligencia financiera IA para empresas exportadoras como Guandy. Cuando exportás a 45 países y uno de tus clientes más grandes puede ser Walmart, saber quién está pagando tarde antes de que afecte tu caja es crítico. ¿Te doy 30 mins para enseñarte el dashboard?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Extract S.A. (Naturalmente Esencial)", sector:"Agroindustria / Aceites Esenciales", desc:"Fabricante de aceites esenciales de cardamomo, citronela y allspice. Sus aceites entran en el perfume Cartier Declaration. Exportan a Américas, Europa y Asia. ~75 empleados.", fit:"Flujo estacional por cosecha de cardamomo + cobros multi-moneda (USD, EUR, GBP). CFO AI predice crisis 45 días antes.", decisor:"César Vettorazzi", cargo:"Director General", linkedin:"https://gt.linkedin.com/in/cesar-vettorazzi-99922585", email:"", mensaje:"César, te escribo porque lancé un servicio de visibilidad financiera con IA diseñado para agroindustrias como Extract. El cardamomo tiene cosecha concentrada, pero los cobros llegan en dólares, euros y libras a distintos tiempos. Saber tu runway exacto las próximas 13 semanas puede evitar una crisis silenciosa. ¿30 mins para mostrarlo?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Monte de Oro, S.A.", sector:"Agroindustria / Cardamomo", desc:"Procesadora y exportadora de cardamomo (marca El Elefante Original). Única planta con ISO 9001:2015. Fundada 1958. Planta en Río Bravo + oficinas Zona 10, Ciudad de Guatemala.", fit:"Empresa familiar 67 años, producto de exportación con precio volátil. Decisiones de inversión requieren visibilidad real-time.", decisor:"Ronald Alvarado", cargo:"Liderazgo familiar / Ejecutivo (INCAE Family Business)", linkedin:"https://www.linkedin.com/in/ronald-alvarado-19180518b/", email:"mdo@mdo.gt", mensaje:"Ronald, te escribo porque estoy lanzando un servicio de inteligencia financiera con IA para empresas de agroindustria y exportación. En una empresa como Monte de Oro, donde el precio del cardamomo puede variar 30% en semanas, tener visibilidad en tiempo real del flujo y los márgenes cambia completamente cómo decidís. ¿30 mins?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"CEPASA (Condimentos, Empaques y Productos Alimenticios S.A.)", sector:"Alimentos y Bebidas / Condimentos", desc:"Fabricante de condimentos, conservas y salsas a base de tomate. Zona 7, Ciudad de Guatemala. Fundada 1977.", fit:"Múltiples líneas (salsas, conservas, especias). Sin visibilidad por línea = no saben qué subsidia qué. 48 años.", decisor:"Augusto Espinosa", cargo:"Gerente General", linkedin:"", email:"(dominio cepasaguatemala.com)", mensaje:"Augusto, le escribo porque estoy lanzando un servicio de inteligencia financiera con IA para empresas manufactureras. En CEPASA, con varias líneas de producto —salsas, conservas, condimentos— lo normal es no saber en tiempo real cuál línea está subsidiando a las demás. ¿Le doy 30 minutos para mostrarle cómo funciona el dashboard?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Trebolac (Amerador S.A.)", sector:"Agroindustria / Lácteos", desc:"Primer embotellador de leche UHT en Guatemala. Produce leche, quesos, crema, dulce de leche. Planta en Escuintla, 137 proveedores, exporta a El Salvador. +US$30M invertidos desde 2004.", fit:"Crecimiento activo, producto perecedero, 137 proveedores, exportación. Gestión financiera compleja. ~200+ empleados.", decisor:"C-level no encontrado — Alternativo: Marco de la Roca", cargo:"Gerente de Planta", linkedin:"https://www.linkedin.com/in/marco-de-la-roca-1354431a3/", email:"ventas@trebolac.com.gt", mensaje:"Marco, te escribo porque lancé un servicio de visibilidad financiera con IA para empresas de alimentos. En Trebolac, con producto perecedero, 137 proveedores de leche y exportación activa, tener visibilidad de flujo de caja en tiempo real no es opcional. ¿Podrías conectarme con quien lidera la parte financiera, o te doy 30 mins a vos para verlo?", estado:"Pendiente" },
-  { fecha:"2026-05-12", empresa:"Industrias Melgees Guatemala, S.A.", sector:"Alimentos y Bebidas / Chocolate Industrial", desc:"Fabricante de coberturas de chocolate, cacao en polvo, chispas de chocolate. Provee B2B a panaderías y heladerías. ~$12.6M en ventas. Parque Industrial Villa Nueva. Fundada 2001.", fit:"B2B con múltiples clientes industriales, cobros irregulares, múltiples SKUs. Concentración de cartera = riesgo silencioso.", decisor:"José Melgar", cargo:"Probable Fundador/Dueño (apellido = nombre empresa)", linkedin:"", email:"", mensaje:"José, te escribo porque tengo un servicio de inteligencia financiera con IA para fabricantes B2B como Melgees. Cuando tus clientes son panaderías y heladerías, los ciclos de pago son irregulares y es fácil tener Q200K+ atrapados en cartera sin darte cuenta. ¿Me das 30 mins para mostrarte el dashboard?", estado:"Pendiente" }
+  {
+    fecha: "2026-05-13",
+    empresa: "Emporium Guatemala",
+    sector: "Retail / Moda masculina",
+    descripcion: "Cadena de 9 tiendas de ropa y accesorios para hombre. Empresa familiar multigeneracional fundada ~1950, presencia en centros comerciales premium. 51-200 empleados.",
+    porQueFit: "Múltiples puntos de venta = caja diaria fragmentada. Visibilidad de qué tienda rinde, cuándo reponer y cuál tiene mejor margen por m².",
+    decisor: "Roberto Morales",
+    cargo: "Gerente General Corporativo",
+    linkedin: "https://www.linkedin.com/in/roberto-morales-a1716721",
+    email: "",
+    mensaje: "Hola Roberto, te escribo porque estoy lanzando un servicio para ayudar a directores de cadenas de retail a tener visibilidad financiera real de cada tienda, no solo el consolidado al mes. Con IA y automatización. Creo que en Emporium, con 9 puntos de venta, te podría dar claridad de caja por sucursal en tiempo real. ¿Me regalás 30 minutos para mostrártelo?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "Corporación Fátima",
+    sector: "Retail / Papelería y librería",
+    descripcion: "Cadena de papelerías/librerías en Guatemala fundada en 1966 por Francisco García Álvarez. Varias sucursales, artículos escolares y de oficina. 51-200 empleados.",
+    porQueFit: "Negocio con picos brutales (temporada escolar) y valles marcados. Predecir flujo de caja por temporada y optimizar inventario es el caso de uso perfecto.",
+    decisor: "Camila García Vidal (familia propietaria)",
+    cargo: "Directora de Marketing",
+    linkedin: "",
+    email: "",
+    mensaje: "Hola Camila, te escribo porque estoy trabajando con empresas familiares de retail en Guatemala para darles visibilidad financiera real con IA — específicamente para negocios que tienen temporadas fuertes como la escolar, donde el flujo de caja se dispara y luego cae. Creo que le vendría muy bien a Fátima. ¿Podríamos hablar 30 minutos?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "DICSA — Distribuidora del Caribe",
+    sector: "Distribución / Materias primas industriales",
+    descripcion: "Distribuidora B2B familiar fundada en 1974. Distribuye materias primas (esencias, aceites esenciales) para industria alimenticia, cosmética y farmacéutica en Guatemala y CA. 201-500 empleados.",
+    porQueFit: "Clientes B2B con crédito = cartera de cobro crítica. CFO AI detecta qué cliente se está atrasando 45 días antes de que sea problema real de caja.",
+    decisor: "Alejandro Macías",
+    cargo: "Gerente General (sucesor familiar del fundador)",
+    linkedin: "https://gt.linkedin.com/in/alejandro-macias-63286683",
+    email: "",
+    mensaje: "Alejandro, te escribo porque estoy lanzando un servicio de inteligencia financiera con IA para distribuidoras guatemaltecas — específicamente para visualizar en tiempo real la cartera de cobro B2B: qué cliente se está atrasando, cuánto flujo entrará en las próximas semanas, cuándo es el riesgo. Creo que aplica bien para DICSA. ¿Me regalás 30 minutos?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "DASA — Droguería Americana S.A.",
+    sector: "Distribución / Farmacéutica y equipos médicos",
+    descripcion: "Distribuidora farmacéutica familiar guatemalteca fundada en 1983. Distribuye a 2,100+ farmacias, 2,800+ médicos y 280+ hospitales. 200+ empleados. 2da generación al mando.",
+    porQueFit: "2,100+ clientes de farmacia = cartera de cobro masiva. Saber qué cliente bajó frecuencia de compra, qué cuenta está en riesgo y cuánto representa del flujo mensual.",
+    decisor: "Jorge Mario Cuéllar",
+    cargo: "Gerente General (hijo del fundador Otoniel Cuéllar)",
+    linkedin: "https://www.linkedin.com/in/jorge-mario-cuellar-dasa-54b54540",
+    email: "",
+    mensaje: "Jorge Mario, te escribo porque estoy lanzando un servicio que ayuda a distribuidoras con carteras grandes a tener visibilidad financiera con IA: qué cliente se está atrasando en pago, cuál bajó su volumen, cuánto flujo real entra en los próximos 13 semanas. Con 2,100 puntos de farmacia, creo que en DASA esto resuelve un dolor real. ¿Hablamos 30 minutos?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "Grupo Distefano",
+    sector: "Retail / Moda Fast Fashion",
+    descripcion: "Cadena de ropa y moda con 27 tiendas en Guatemala (+6 en Honduras/Costa Rica). Fundada en 1979 por Antonio Kozina. Empresa familiar 2da generación. 200-400 empleados.",
+    porQueFit: "27 tiendas propias + franquicias = necesidad urgente de saber cuál tienda rinde, cuál tiene mala rotación de inventario y cómo va el flujo consolidado en tiempo real.",
+    decisor: "Cacho Kozina (Sergio Kozina)",
+    cargo: "Co-Founder & CTO",
+    linkedin: "https://gt.linkedin.com/in/cacho-kozina-b20a4b213",
+    email: "",
+    mensaje: "Cacho, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para cadenas de retail. Básicamente le dás a la dirección un dashboard que muestra cuál de tus 27 tiendas está rindiendo, cuál tiene inventario atascado y cómo va la caja consolidada en tiempo real, sin esperar al cierre del mes. Creo que le vendría bien a Distefano. ¿Hablamos 30 minutos?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "Muebles Victoria / DYMSA",
+    sector: "Manufactura + Retail / Muebles",
+    descripcion: "Empresa familiar guatemalteca fundada en 1971. Sala de ventas 1,500 m² (zona 1) + DYMSA planta fabricación 3,500 m² (1984). Vende al consumidor final y B2B. 50-200 empleados.",
+    porQueFit: "Manufactura propia + retail propio = dos flujos de caja que coordinar. Empresa familiar de 2da/3ra generación sin ERP corporativo visible — caso ideal para CFO AI.",
+    decisor: "Edgar Zamora",
+    cargo: "Gerente de Oficina, DYMSA Group (familia Zamora fundadora)",
+    linkedin: "https://www.linkedin.com/in/edgar-zamora-31a052127",
+    email: "",
+    mensaje: "Edgar, te escribo porque estoy trabajando con empresas que tienen manufactura y venta propia para darles un dashboard financiero con IA: cuánto cuesta producir vs. cuánto entra por ventas, cuándo hay que financiar producción y cuándo la caja va a apretar. Creo que en Muebles Victoria / DYMSA esto tiene mucho sentido. ¿Podés regalarme 30 minutos?",
+    estado: "Pendiente"
+  },
+  {
+    fecha: "2026-05-13",
+    empresa: "Distribuidora Gama",
+    sector: "Distribución / Consumo masivo regional",
+    descripcion: "Distribuidora de consumo masivo (Colgate, Kellogg's, Palmolive) con HQ en Quetzaltenango. Cubre 10 departamentos del occidente de Guatemala. 4,000 m² bodega, flota propia, app Android propia. Fundada 1994.",
+    porQueFit: "10 departamentos = decenas de rutas, cobranzas distribuidas y flujo de caja complejo. Sin un sistema que consolide todo en un dashboard, la dirección va ciega.",
+    decisor: "No identificado",
+    cargo: "Contactar vía distribuidoragama.com por Gerente General",
+    linkedin: "",
+    email: "",
+    mensaje: "Hola, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para distribuidoras regionales — específicamente para empresas que tienen rutas en varios departamentos y necesitan ver en un dashboard cómo va la cobranza por zona, qué clientes se están atrasando y cómo se ve el flujo de las próximas semanas. Creo que aplica bien para Distribuidora Gama. ¿Me regalás 30 minutos?",
+    estado: "Pendiente"
+  }
 ];
 
-function formatDate(d) {
-  const [y,m,dy] = d.split('-');
-  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  return `${parseInt(dy)} ${months[parseInt(m)-1]} ${y}`;
+// ─── Estado dinámico (en memoria, no persiste entre visitas) ───
+const estadoMap = {};
+
+function getEstado(empresa) {
+  return estadoMap[empresa] || PROSPECTS.find(p => p.empresa === empresa)?.estado || 'Pendiente';
 }
 
-function escapeHtml(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function formatFecha(str) {
+  if (!str) return '';
+  const [y, m, d] = str.split('-');
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
 }
 
-function buildCard(p) {
-  const statusClass = `status-${p.estado.replace(/\s/g,'')}`;
-  const hasLinkedIn = p.linkedin && p.linkedin.startsWith('http');
-  const hasEmail = p.email && p.email.includes('@');
-  const hasMensaje = p.mensaje && p.mensaje.length > 5;
+function getEstadoClass(estado) {
+  if (!estado) return 'estado-default';
+  const e = estado.toLowerCase();
+  if (e.includes('pendiente')) return 'estado-Pendiente';
+  if (e.includes('contactado')) return 'estado-Contactado';
+  if (e.includes('nofit') || e.includes('no fit')) return 'estado-NoFit';
+  if (e.includes('meeting')) return 'estado-Meeting';
+  return 'estado-default';
+}
 
-  const linkedinBtn = hasLinkedIn
-    ? `<a class="contact-link link-linkedin" href="${escapeHtml(p.linkedin)}" target="_blank">🔗 LinkedIn</a>`
-    : `<span class="contact-link link-na">LinkedIn no encontrado</span>`;
-
-  const emailBtn = hasEmail
-    ? `<a class="contact-link link-email" href="mailto:${escapeHtml(p.email)}">${escapeHtml(p.email)}</a>`
-    : '';
-
-  const mensajeSection = hasMensaje ? `
-    <div>
-      <div class="card-section-label">Mensaje listo para enviar</div>
-      <div class="mensaje-block">
-        <div class="mensaje-text">"${escapeHtml(p.mensaje)}"</div>
-        <button class="copy-btn" onclick="copyMsg(this, ${JSON.stringify(p.mensaje).replace(/'/g,"&#39;")})">📋 Copiar mensaje</button>
-      </div>
-    </div>` : '';
-
-  const decisorSection = (p.decisor && p.decisor !== '—') ? `
-    <div class="contact-block">
-      <div class="card-section-label">Decisor</div>
-      <div class="contact-name">${escapeHtml(p.decisor)}</div>
-      <div class="contact-cargo">${escapeHtml(p.cargo)}</div>
-      <div class="contact-links">${linkedinBtn}${emailBtn}</div>
-    </div>` : `
-    <div class="contact-block">
-      <div class="card-section-label">Decisor</div>
-      <div class="contact-cargo" style="color:#9ca3af;font-style:italic">Pendiente de investigar</div>
-    </div>`;
+function renderCard(p) {
+  const estado = getEstado(p.empresa);
+  const li = p.linkedin && p.linkedin.startsWith('http') ? p.linkedin : null;
+  const liBtn = li ? `<a class="link-btn link-linkedin" href="${li}" target="_blank">💼 LinkedIn</a>` : '';
+  const webDomain = p.empresa.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
 
   return `
-    <div class="prospect-card" data-sector="${escapeHtml(p.sector)}" data-status="${escapeHtml(p.estado)}" data-search="${escapeHtml((p.empresa+' '+p.sector+' '+p.decisor+' '+p.desc).toLowerCase())}">
-      <div class="card-header">
-        <div class="card-header-left">
-          <div class="empresa-name">${escapeHtml(p.empresa)}</div>
-          <span class="sector-tag">${escapeHtml(p.sector)}</span>
+  <article class="card" data-empresa="${p.empresa}" data-sector="${p.sector}">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="badge-sector">${p.sector.split('/')[0].trim()}</span>
+        <span class="badge-fecha">${formatFecha(p.fecha)}</span>
+      </div>
+      <h2>${p.empresa}</h2>
+    </div>
+    <div class="card-body">
+      <p class="card-desc">${p.descripcion}</p>
+      <div class="fit-box">
+        <div class="fit-label">Por qué fit</div>
+        ${p.porQueFit}
+      </div>
+      <div class="decisor-block">
+        <div class="decisor-label">Decisor</div>
+        <div class="decisor-name">${p.decisor}</div>
+        <div class="decisor-cargo">${p.cargo}</div>
+        <div class="decisor-links">
+          ${liBtn}
+          ${!li ? '<span class="no-link">LinkedIn no encontrado</span>' : ''}
         </div>
-        <span class="status-badge ${statusClass}">${escapeHtml(p.estado)}</span>
       </div>
-      <div class="card-body">
-        <div>
-          <div class="card-section-label">Qué hacen</div>
-          <div class="card-desc">${escapeHtml(p.desc)}</div>
+      <div class="mensaje-block">
+        <div class="mensaje-toggle" onclick="toggleMsg(this)">
+          <span class="toggle-arrow">▶</span> Ver mensaje personalizado
         </div>
-        <div class="fit-text">✓ ${escapeHtml(p.fit)}</div>
-        ${decisorSection}
-        ${mensajeSection}
+        <div class="mensaje-text">
+          <button class="copy-btn" onclick="copyMsg(this)">Copiar</button>
+          ${p.mensaje}
+        </div>
       </div>
-      <div class="card-footer">
-        <span class="card-date">📅 ${formatDate(p.fecha)}</span>
-      </div>
-    </div>`;
+    </div>
+    <div class="estado-row">
+      <span class="estado-badge ${getEstadoClass(estado)}">${estado}</span>
+      <span class="card-date-small">${formatFecha(p.fecha)}</span>
+    </div>
+  </article>`;
 }
 
-let activeSector = 'all';
-let activeStatus = 'all';
+function toggleMsg(el) {
+  const arrow = el.querySelector('.toggle-arrow');
+  const txt = el.nextElementSibling;
+  txt.classList.toggle('open');
+  arrow.textContent = txt.classList.contains('open') ? '▼' : '▶';
+}
+
+function copyMsg(btn) {
+  const txt = btn.parentElement.textContent.replace('Copiar','').trim();
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 1800);
+  });
+}
+
+// ─── Filtros y búsqueda ───
+let activeFilter = 'all';
 let searchQuery = '';
 
-function getFiltered() {
-  return PROSPECTS.filter(p => {
-    const sectorMatch = activeSector === 'all' || p.sector.includes(activeSector);
-    const statusMatch = activeStatus === 'all' || p.estado === activeStatus;
-    const searchMatch = !searchQuery || p.empresa.toLowerCase().includes(searchQuery) ||
-      p.sector.toLowerCase().includes(searchQuery) ||
-      p.decisor.toLowerCase().includes(searchQuery) ||
-      p.desc.toLowerCase().includes(searchQuery);
-    return sectorMatch && statusMatch && searchMatch;
+function getUniqueSectors() {
+  const seen = new Set();
+  return PROSPECTS.map(p => p.sector.split('/')[0].trim()).filter(s => {
+    if (seen.has(s)) return false;
+    seen.add(s); return true;
   });
 }
 
-function render() {
-  const filtered = getFiltered();
-  const grid = document.getElementById('prospects-grid');
+function buildFilters() {
+  const container = document.getElementById('filters');
+  const sectors = getUniqueSectors();
+  sectors.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill';
+    btn.dataset.filter = s;
+    btn.textContent = s;
+    btn.onclick = () => setFilter(s);
+    container.appendChild(btn);
+  });
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === f);
+  });
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const q = searchQuery.toLowerCase();
+  const filtered = PROSPECTS.filter(p => {
+    const sectorMatch = activeFilter === 'all' || p.sector.startsWith(activeFilter);
+    const searchMatch = !q ||
+      p.empresa.toLowerCase().includes(q) ||
+      p.sector.toLowerCase().includes(q) ||
+      p.decisor.toLowerCase().includes(q) ||
+      p.descripcion.toLowerCase().includes(q);
+    return sectorMatch && searchMatch;
+  });
+
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontraron prospectos con estos filtros.</p></div>`;
+    grid.innerHTML = `<div class="empty"><h3>Sin resultados</h3><p>Intenta con otro filtro o búsqueda.</p></div>`;
   } else {
-    grid.innerHTML = filtered.map(buildCard).join('');
+    grid.innerHTML = filtered.map(renderCard).join('');
   }
-  document.getElementById('results-count').textContent = `${filtered.length} de ${PROSPECTS.length} prospectos`;
+  updateStats();
 }
 
-function buildSectorPills() {
-  const sectors = {};
-  PROSPECTS.forEach(p => {
-    const broad = p.sector.split('/')[0].trim();
-    sectors[broad] = (sectors[broad]||0)+1;
-  });
-  const pillsEl = document.getElementById('sector-pills');
-  const sorted = Object.entries(sectors).sort((a,b)=>b[1]-a[1]);
-  sorted.forEach(([s, count]) => {
-    const div = document.createElement('div');
-    div.className = 'pill';
-    div.dataset.sector = s;
-    div.textContent = `${s} (${count})`;
-    div.addEventListener('click', () => {
-      activeSector = s;
-      document.querySelectorAll('#sector-pills .pill').forEach(p=>p.classList.remove('active'));
-      div.classList.add('active');
-      render();
-    });
-    pillsEl.appendChild(div);
-  });
-  pillsEl.querySelector('[data-sector="all"]').addEventListener('click', () => {
-    activeSector = 'all';
-    document.querySelectorAll('#sector-pills .pill').forEach(p=>p.classList.remove('active'));
-    pillsEl.querySelector('[data-sector="all"]').classList.add('active');
-    render();
-  });
+function updateStats() {
+  const total = PROSPECTS.length;
+  const pendiente = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('pendiente')).length;
+  const contactado = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('contactado')).length;
+  const meeting = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('meeting')).length;
+  document.getElementById('count-total').textContent = total;
+  document.getElementById('count-pendiente').textContent = pendiente;
+  document.getElementById('count-contactado').textContent = contactado;
+  document.getElementById('count-meeting').textContent = meeting;
 }
 
-function buildStats() {
-  document.getElementById('total-count').textContent = PROSPECTS.length;
-  document.getElementById('stat-pendiente').textContent = PROSPECTS.filter(p=>p.estado==='Pendiente').length;
-  document.getElementById('stat-contactado').textContent = PROSPECTS.filter(p=>p.estado==='Contactado').length;
-  document.getElementById('stat-nofit').textContent = PROSPECTS.filter(p=>p.estado==='NoFit').length;
-  document.getElementById('stat-linkedin').textContent = PROSPECTS.filter(p=>p.linkedin&&p.linkedin.startsWith('http')).length;
-}
-
-document.querySelectorAll('#status-pills .pill').forEach(pill => {
-  pill.addEventListener('click', () => {
-    activeStatus = pill.dataset.status;
-    document.querySelectorAll('#status-pills .pill').forEach(p=>p.classList.remove('active'));
-    pill.classList.add('active');
-    render();
-  });
+// ─── Init ───
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  renderGrid();
 });
 
-document.getElementById('search-input').addEventListener('input', e => {
-  searchQuery = e.target.value.toLowerCase();
-  render();
-});
-
-function copyMsg(btn, msg) {
-  navigator.clipboard.writeText(msg).then(()=>{
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copiado!';
-    setTimeout(()=>btn.textContent=orig,2000);
-  });
-}
-
-buildSectorPills();
-buildStats();
-render();
+buildFilters();
+renderGrid();
 </script>
 </body>
 </html>
