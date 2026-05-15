@@ -1,820 +1,483 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CFO AI — Prospectos Guatemala</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --verde: #0d4f3c;
-      --verde-claro: #e8f5f0;
-      --verde-medio: #1a6b52;
-      --dorado: #c9a84c;
-      --gris-bg: #f7f7f5;
-      --gris-borde: #e2e2de;
-      --gris-texto: #6b6b68;
-      --rojo: #c0392b;
-      --azul: #2563eb;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--gris-bg);
-      color: #1a1a18;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFO AI — Tracker de Prospectos Guatemala</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0d4f3c;
+    --green-light: #e8f2ee;
+    --green-mid: #1a6b52;
+    --accent: #2ecc71;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --badge-farm: #7c3aed;
+    --badge-agro: #15803d;
+    --badge-mfg: #b45309;
+    --badge-retail: #0369a1;
+    --badge-dist: #6d28d9;
+    --badge-text: #be185d;
+    --badge-const: #dc2626;
+    --badge-other: #374151;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* HEADER */
-    .header {
-      background: var(--verde);
-      color: white;
-      padding: 2.5rem 2rem 2rem;
-    }
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .header-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 0.5rem;
-    }
-    .header h1 {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 400;
-      line-height: 1.2;
-      margin-bottom: 0.75rem;
-    }
-    .header-subtitle {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.65);
-      font-weight: 400;
-    }
+  /* HEADER */
+  .header {
+    background: var(--green);
+    color: white;
+    padding: 28px 40px 24px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .brand-name { font-family: 'Instrument Serif', serif; font-size: 1.6rem; color: white; line-height: 1.2; }
+  .brand-sub { font-size: 0.75rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+  .header-meta { text-align: right; }
+  .last-update { font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+  .header-url { font-size: 0.7rem; color: rgba(255,255,255,0.4); font-family: monospace; }
 
-    /* STATS BAR */
-    .stats-bar {
-      background: white;
-      border-bottom: 1px solid var(--gris-borde);
-      padding: 1rem 2rem;
-    }
-    .stats-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      gap: 2.5rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-    .stat-num {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--verde);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gris-texto);
-    }
-    .stat-divider {
-      width: 1px;
-      height: 36px;
-      background: var(--gris-borde);
-    }
-    .last-update {
-      margin-left: auto;
-      font-size: 0.78rem;
-      color: var(--gris-texto);
-    }
+  /* STATS */
+  .stats-bar {
+    background: var(--green-mid);
+    padding: 14px 40px;
+  }
+  .stats-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 32px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; color: white; line-height: 1; }
+  .stat-label { font-size: 0.68rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 
-    /* MAIN */
-    .main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 2rem 4rem;
-    }
+  /* FILTERS */
+  .filters-wrap {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .filters-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+  .pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .pill.all { background: var(--green); color: white; border-color: var(--green); }
+  .pill.all.inactive { background: white; color: var(--green); border-color: var(--green); }
+  .pill.sector-pill { background: var(--bg); color: var(--muted); border-color: var(--border); }
+  .pill.sector-pill:hover { border-color: var(--green); color: var(--green); }
+  .pill.sector-pill.active { background: var(--green-light); color: var(--green); border-color: var(--green); }
 
-    /* FILTERS */
-    .filters {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.75rem;
-      align-items: center;
-    }
-    .filter-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gris-texto);
-      margin-right: 0.25rem;
-    }
-    .filter-pill {
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      border: 1.5px solid var(--gris-borde);
-      background: white;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: #444;
-      cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .filter-pill:hover { border-color: var(--verde-medio); color: var(--verde-medio); }
-    .filter-pill.active {
-      background: var(--verde);
-      border-color: var(--verde);
-      color: white;
-    }
+  /* SEARCH */
+  .search-wrap { margin-left: auto; }
+  .search-input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--green); }
 
-    /* SEARCH */
-    .search-wrap {
-      position: relative;
-      margin-bottom: 1.5rem;
-    }
-    .search-icon {
-      position: absolute;
-      left: 0.9rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--gris-texto);
-      font-size: 0.9rem;
-    }
-    #search {
-      width: 100%;
-      padding: 0.65rem 1rem 0.65rem 2.5rem;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-family: 'Inter', sans-serif;
-      background: white;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    #search:focus { border-color: var(--verde-medio); }
+  /* MAIN */
+  .main { max-width: 1200px; margin: 0 auto; padding: 28px 40px 60px; }
 
-    /* GRID */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.25rem;
-    }
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+  }
 
-    /* CARD */
-    .card {
-      background: white;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: box-shadow 0.2s, transform 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 8px 24px rgba(13,79,60,0.1);
-      transform: translateY(-2px);
-    }
-    .card-header {
-      padding: 1.25rem 1.25rem 0.9rem;
-      border-bottom: 1px solid var(--gris-borde);
-    }
-    .card-meta {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .badge-sector {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.6rem;
-      border-radius: 4px;
-      background: var(--verde-claro);
-      color: var(--verde);
-    }
-    .badge-fecha {
-      font-size: 0.65rem;
-      color: var(--gris-texto);
-      font-weight: 400;
-    }
-    .card h2 {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: #1a1a18;
-      line-height: 1.3;
-    }
-    .card-body {
-      padding: 1rem 1.25rem;
-    }
-    .card-desc {
-      font-size: 0.82rem;
-      color: #444;
-      line-height: 1.6;
-      margin-bottom: 0.9rem;
-    }
-    .fit-box {
-      background: var(--verde-claro);
-      border-left: 3px solid var(--verde);
-      border-radius: 0 6px 6px 0;
-      padding: 0.6rem 0.8rem;
-      font-size: 0.78rem;
-      color: var(--verde-medio);
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-    .fit-label {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--verde);
-      margin-bottom: 0.2rem;
-    }
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
 
-    /* DECISOR */
-    .decisor-block {
-      padding: 0.75rem;
-      background: #fafaf8;
-      border: 1px solid var(--gris-borde);
-      border-radius: 8px;
-      margin-bottom: 0.9rem;
-    }
-    .decisor-label {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gris-texto);
-      margin-bottom: 0.4rem;
-    }
-    .decisor-name {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #1a1a18;
-    }
-    .decisor-cargo {
-      font-size: 0.76rem;
-      color: var(--gris-texto);
-      margin-top: 0.1rem;
-    }
-    .decisor-links {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 5px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.15s;
-    }
-    .link-linkedin {
-      background: #e8f0fe;
-      color: #1d4ed8;
-    }
-    .link-linkedin:hover { background: #1d4ed8; color: white; }
-    .link-web {
-      background: #f0f0ee;
-      color: #555;
-    }
-    .link-web:hover { background: #555; color: white; }
-    .no-link {
-      font-size: 0.7rem;
-      color: #aaa;
-      font-style: italic;
-    }
+  .card-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+  }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .card-fecha { font-size: 0.65rem; color: var(--muted); font-weight: 500; letter-spacing: 0.04em; }
+  .card-estado { font-size: 0.62rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; flex-shrink: 0; }
+  .estado-pendiente { background: #fef9c3; color: #713f12; }
+  .estado-contactado { background: #dcfce7; color: #14532d; }
+  .estado-nofit { background: #fee2e2; color: #991b1b; }
+  .estado-default { background: var(--bg); color: var(--muted); }
 
-    /* MENSAJE */
-    .mensaje-block {
-      margin-top: 0.75rem;
-    }
-    .mensaje-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--verde-medio);
-      cursor: pointer;
-      user-select: none;
-      margin-bottom: 0.4rem;
-    }
-    .mensaje-text {
-      display: none;
-      font-size: 0.8rem;
-      line-height: 1.65;
-      color: #333;
-      background: #f7f7f5;
-      border: 1px solid var(--gris-borde);
-      border-radius: 7px;
-      padding: 0.7rem 0.85rem;
-      position: relative;
-    }
-    .mensaje-text.open { display: block; }
-    .copy-btn {
-      position: absolute;
-      top: 0.4rem;
-      right: 0.5rem;
-      font-size: 0.65rem;
-      padding: 0.15rem 0.5rem;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-    }
-    .copy-btn:hover { background: var(--verde-medio); }
+  .card-empresa { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 6px; }
+  .sector-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: white;
+    background: var(--badge-other);
+  }
 
-    /* ESTADO */
-    .estado-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.6rem 1.25rem;
-      border-top: 1px solid var(--gris-borde);
-      background: #fafaf8;
-    }
-    .estado-badge {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.6rem;
-      border-radius: 4px;
-    }
-    .estado-Pendiente { background: #fef3c7; color: #92400e; }
-    .estado-Contactado { background: #d1fae5; color: #065f46; }
-    .estado-NoFit { background: #fee2e2; color: #991b1b; }
-    .estado-Meeting { background: #dbeafe; color: #1e40af; }
-    .estado-default { background: #f3f4f6; color: #374151; }
-    .card-date-small {
-      font-size: 0.68rem;
-      color: var(--gris-texto);
-    }
+  .card-body { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .card-fit { font-size: 0.75rem; color: var(--text); line-height: 1.5; }
+  .fit-label { font-size: 0.65rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 
-    /* EMPTY */
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--gris-texto);
-    }
-    .empty h3 {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      margin-bottom: 0.5rem;
-    }
+  .card-divider { height: 1px; background: var(--border); }
 
-    /* FOOTER */
-    .footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.75rem;
-      color: var(--gris-texto);
-      border-top: 1px solid var(--gris-borde);
-      background: white;
-    }
+  .decisor-block { display: flex; flex-direction: column; gap: 4px; }
+  .decisor-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .decisor-cargo { font-size: 0.72rem; color: var(--muted); }
+  .decisor-links { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px; }
+  .link-btn {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .link-li { background: #eef2ff; color: #3730a3; }
+  .link-em { background: #f0fdf4; color: #15803d; }
+  .no-link { font-size: 0.65rem; color: #d1d5db; font-style: italic; }
 
-    @media (max-width: 600px) {
-      .header { padding: 1.75rem 1rem 1.5rem; }
-      .stats-inner { gap: 1.25rem; }
-      .main { padding: 1.25rem 1rem 3rem; }
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  .mensaje-block { background: var(--green-light); border-radius: 8px; padding: 10px 12px; }
+  .mensaje-label { font-size: 0.62rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .mensaje-text { font-size: 0.75rem; color: #1a3d2f; line-height: 1.55; }
+
+  .copy-btn {
+    background: none;
+    border: 1.5px solid var(--green);
+    color: var(--green);
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .copy-btn:hover { background: var(--green); color: white; }
+  .copy-btn.copied { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+  .empty-state h3 { font-size: 1rem; margin-bottom: 8px; }
+  .empty-state p { font-size: 0.8rem; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--muted); border-top: 1px solid var(--border); background: white; }
+
+  @media (max-width: 640px) {
+    .header, .stats-bar, .filters-wrap, .main { padding-left: 16px; padding-right: 16px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .stats-inner { gap: 20px; }
+    .search-wrap { width: 100%; }
+    .search-input { width: 100%; }
+  }
+</style>
 </head>
 <body>
 
 <header class="header">
   <div class="header-inner">
-    <div class="header-label">CFO AI · Prospección B2B Guatemala</div>
-    <h1>Pipeline de Prospectos</h1>
-    <p class="header-subtitle">Empresas guatemaltecas calificadas · 50-500 empleados · Productos físicos</p>
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <div>
+          <div class="brand-name">CFO AI — Prospectos GT</div>
+          <div class="brand-sub">Tracker de Leads · B2B Guatemala</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="last-update">Actualizado: <strong id="last-update">15 mayo 2026</strong></div>
+        <div class="header-url">JoseLeanDev.github.io/cfo-ai-prospectos</div>
+      </div>
+    </div>
   </div>
 </header>
 
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat">
-      <span class="stat-num" id="count-total">0</span>
-      <span class="stat-label">Prospectos</span>
+    <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Total Prospectos</span></div>
+    <div class="stat"><span class="stat-num" id="stat-pending">0</span><span class="stat-label">Pendientes</span></div>
+    <div class="stat"><span class="stat-num" id="stat-contacted">0</span><span class="stat-label">Contactados</span></div>
+    <div class="stat"><span class="stat-num" id="stat-sectors">0</span><span class="stat-label">Industrias</span></div>
+  </div>
+</div>
+
+<div class="filters-wrap">
+  <div class="filters-inner">
+    <span class="filter-label">Filtrar:</span>
+    <span class="pill all" id="pill-all" onclick="filterSector('all')">Todos</span>
+    <div id="sector-pills"></div>
+    <div class="search-wrap">
+      <input class="search-input" type="text" id="search-input" placeholder="Buscar empresa..." oninput="filterSearch(this.value)">
     </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num" id="count-pendiente">0</span>
-      <span class="stat-label">Pendientes</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num" id="count-contactado">0</span>
-      <span class="stat-label">Contactados</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num" id="count-meeting">0</span>
-      <span class="stat-label">En Meeting</span>
-    </div>
-    <div class="last-update">Actualizado: <strong id="last-update">14 mayo 2026</strong></div>
   </div>
 </div>
 
 <main class="main">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="Buscar empresa, sector, decisor…" />
-  </div>
-
-  <div class="filters" id="filters">
-    <span class="filter-label">Sector:</span>
-    <button class="filter-pill active" data-filter="all">Todos</button>
-  </div>
-
-  <div class="grid" id="grid"></div>
+  <div class="cards-grid" id="cards-grid"></div>
 </main>
 
 <footer class="footer">
-  CFO AI · Dashboard de Prospección · Guatemala · <a href="https://cfoai.solutions/" style="color:var(--verde);text-decoration:none;" target="_blank">cfoai.solutions</a>
+  CFO AI Lead Hunter · cfoai.solutions · Dashboard auto-generado diariamente
 </footer>
 
 <script>
 const PROSPECTS = [
-  {
-    fecha: "2026-05-14",
-    empresa: "Uniformes de Guatemala (UDG)",
-    sector: "Textil / Uniformes",
-    descripcion: "Fabricante guatemalteca de uniformes corporativos, industriales, escolares y hospitalarios. Capacidad de 80,000 prendas/mes, 9 puntos de venta, fundada 1992.",
-    tamano: "~150-300 empleados | Fundada 1992",
-    porQueFit: "Alto volumen de clientes B2B con condiciones de pago distintas. Cuentas por cobrar corporativas y escolares = riesgo de cartera oculto. Sin ERP corporativo detectado.",
-    decisor: "Víctor Girón",
-    cargo: "Gerente General",
-    linkedin: "https://www.linkedin.com/in/victorgironudg/",
-    email: "no encontrado vía web pública",
-    mensaje: "Víctor, te escribo porque estoy lanzando algo específico para empresas como Uniformes de Guatemala — donde manejás docenas de clientes corporativos y escolares con condiciones de pago distintas. Con 80,000 prendas al mes la cartera pendiente puede crecer sin que te enterés. Tengo una solución de visibilidad financiera con IA que te da el panorama completo en tiempo real. ¿Me das 30 minutos para mostrártelo?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "Samboro, S.A.",
-    sector: "Construcción / Cerámica",
-    descripcion: "Fabricante guatemalteca líder en pisos cerámicos, azulejos y fachaletas. ~422 empleados, exporta a USA y Caribe, contrato de maquila con marca española Keraben. Fundada 1989.",
-    tamano: "~422 empleados | Fundada 1989",
-    porQueFit: "Mix de ingresos en quetzales y dólares + exportación = complejidad financiera alta. Sin ERP corporativo detectado. Familia Ayau, empresa guatemalteca 100%.",
-    decisor: "Manuel Ayau García",
-    cargo: "Gerente General",
-    linkedin: "https://www.linkedin.com/in/manuel-ayau/",
-    email: "no encontrado vía web pública",
-    mensaje: "Manuel, te escribo porque Samboro tiene algo que pocas empresas guatemaltecas manejan: ingresos en quetzales y dólares, clientes locales y de exportación, más el contrato de maquila con Keraben. Ese mix hace que la visibilidad financiera real sea difícil. Estoy lanzando un servicio de inteligencia financiera con IA para exactamente ese perfil. ¿Me das 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "Multitubo, S.A.",
-    sector: "Construcción / Tubería PVC",
-    descripcion: "Fabricante guatemalteca de tuberías y accesorios PVC y HDPE para agua, electricidad y saneamiento. Exporta a El Salvador, Honduras y Costa Rica. Miembro CIG. Fundada 2002.",
-    tamano: "51-200 empleados | Fundada 2002",
-    porQueFit: "Exportación a 3 países = cuentas por cobrar en múltiples mercados con diferentes ritmos de pago. Sin ERP corporativo detectado. Empresa guatemalteca privada.",
-    decisor: "Patty Díaz",
-    cargo: "Gerente General",
-    linkedin: "https://gt.linkedin.com/in/patty-diaz-1b91aa25",
-    email: "no encontrado vía web pública",
-    mensaje: "Patty, te escribo porque Multitubo tiene un reto financiero específico: exportás a El Salvador, Honduras y Costa Rica, cada uno con su propio ritmo de pago. Estoy lanzando una plataforma de visibilidad financiera con IA hecha para empresas guatemaltecas que venden más allá de la frontera. ¿30 minutos para enseñártela?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "Global Textiles S.A.",
-    sector: "Textil / Telas tejidas",
-    descripcion: "Fabricante de telas tejidas de punto (mesh, jersey, fleece, french terry) e hilaza. 2 plantas en Guatemala. Vende B2B a marcas locales e internacionales. Fundada 2004.",
-    tamano: "51-200 empleados | Fundada 2004",
-    porQueFit: "Empresa familiar (familia Zaid), clientes B2B, ciclos de cobro largos en textil, inventario en proceso alto. Sin ERP corporativo. Email de VP confirmado públicamente.",
-    decisor: "Jorge Zaid",
-    cargo: "VP Sales / Contacto comercial principal",
-    linkedin: "no encontrado",
-    email: "jorgez@globaltextilesgt.com",
-    mensaje: "Jorge, te escribo porque en el sector textil guatemalteco los ciclos de cobro son largos y el inventario en proceso es grande — y eso crea puntos ciegos financieros que solo ves cuando ya es tarde. Estoy lanzando un dashboard de inteligencia financiera con IA para exactamente ese tipo de operación. ¿Me das 30 minutos para enseñártelo?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "Hilera Textil, S.A.",
-    sector: "Textil / Hilaza",
-    descripcion: "Fabricante guatemalteca de hilaza de algodón y poliéster (ring spun, carded, combed). Vende B2B a fabricantes textiles locales y centroamericanos. Familia Michel. Fundada 1989.",
-    tamano: "51-200 empleados | Fundada 1989",
-    porQueFit: "Empresa familiar 2da/3ra generación (37 años). Costos de hilatura complejos (algodón, poliéster, mezclas). Sin ERP corporativo detectado. Representa el perfil ideal CFO AI.",
-    decisor: "Elias Antonio Jud Michel Zimeri",
-    cargo: "Representante Legal / Propietario",
-    linkedin: "no encontrado (perfiles de familia Michel no indexados públicamente)",
-    email: "no encontrado vía web pública",
-    mensaje: "Elias, te escribo porque las hilaturas tienen costos de producción muy específicos — algodón, poliéster, mezclas — y saber el margen real por tipo de hilo en tiempo real es casi imposible con Excel. Estoy lanzando una plataforma de inteligencia financiera con IA para manufacturas guatemaltecas. ¿Me das 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "MEGAPRODUCTOS, S.A.",
-    sector: "Construcción / Prefabricados",
-    descripcion: "Fabricante de bloques de concreto, muros prefabricados, adoquines, tubería de drenaje y paneles Sistema 2G. Dos plantas (km 16 Carretera al Pacífico y Xenacoj km 39.5). Fundada 1993.",
-    tamano: "51-200 empleados | Fundada 1993",
-    porQueFit: "Dos plantas = necesidad de comparar márgenes y costos por unidad productiva. Múltiples líneas de producto. Sin ERP corporativo (usa WooCommerce/WordPress). Empresa guatemalteca privada.",
-    decisor: "Jonathan Murillo",
-    cargo: "Gerente Administrativo",
-    linkedin: "https://www.linkedin.com/in/jonathan-murillo-a62886144/",
-    email: "ventas@megaproductos.com (contacto general)",
-    mensaje: "Jonathan, te escribo porque con dos plantas de prefabricados en operación, saber cuál genera mejor margen por producción es clave — y eso rara vez está disponible en tiempo real. Estoy lanzando un sistema de visibilidad financiera con IA para empresas guatemaltecas de materiales. ¿Me das 30 minutos para mostrártelo?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-14",
-    empresa: "Pinturas Sega / Químicos Sega, S.A.",
-    sector: "Construcción / Pinturas",
-    descripcion: "Fabricante guatemalteca de pinturas arquitectónicas, automotrices, lacas, barnices, impermeabilizantes y adhesivos. Planta en Bárcenas, Villa Nueva. Miembro CIG Gremial Pinturas. Fundada 1997.",
-    tamano: "~100-300 empleados | Fundada 1997",
-    porQueFit: "Fuerte estacionalidad (temporada seca = pico de construcción). Sin ERP corporativo detectado. Empresa guatemalteca privada, bien establecida en sector construcción.",
-    decisor: "German Trabanino",
-    cargo: "Gerente de Operaciones",
-    linkedin: "no encontrado",
-    email: "no encontrado vía web pública",
-    mensaje: "German, en Pinturas Sega hay algo que pocas empresas del sector manejan bien: la estacionalidad. La temporada seca dispara la demanda y la lluvia la corta — si no anticipás el flujo de caja para esos picos, el capital de trabajo se atora. Estoy lanzando una plataforma de inteligencia financiera con IA para exactamente ese perfil. ¿30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "Emporium Guatemala",
-    sector: "Retail / Moda masculina",
-    descripcion: "Cadena de 9 tiendas de ropa y accesorios para hombre. Empresa familiar multigeneracional fundada ~1950, presencia en centros comerciales premium. 51-200 empleados.",
-    porQueFit: "Múltiples puntos de venta = caja diaria fragmentada. Visibilidad de qué tienda rinde, cuándo reponer y cuál tiene mejor margen por m².",
-    decisor: "Roberto Morales",
-    cargo: "Gerente General Corporativo",
-    linkedin: "https://www.linkedin.com/in/roberto-morales-a1716721",
-    email: "",
-    mensaje: "Hola Roberto, te escribo porque estoy lanzando un servicio para ayudar a directores de cadenas de retail a tener visibilidad financiera real de cada tienda, no solo el consolidado al mes. Con IA y automatización. Creo que en Emporium, con 9 puntos de venta, te podría dar claridad de caja por sucursal en tiempo real. ¿Me regalás 30 minutos para mostrártelo?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "Corporación Fátima",
-    sector: "Retail / Papelería y librería",
-    descripcion: "Cadena de papelerías/librerías en Guatemala fundada en 1966 por Francisco García Álvarez. Varias sucursales, artículos escolares y de oficina. 51-200 empleados.",
-    porQueFit: "Negocio con picos brutales (temporada escolar) y valles marcados. Predecir flujo de caja por temporada y optimizar inventario es el caso de uso perfecto.",
-    decisor: "Camila García Vidal (familia propietaria)",
-    cargo: "Directora de Marketing",
-    linkedin: "",
-    email: "",
-    mensaje: "Hola Camila, te escribo porque estoy trabajando con empresas familiares de retail en Guatemala para darles visibilidad financiera real con IA — específicamente para negocios que tienen temporadas fuertes como la escolar, donde el flujo de caja se dispara y luego cae. Creo que le vendría muy bien a Fátima. ¿Podríamos hablar 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "DICSA — Distribuidora del Caribe",
-    sector: "Distribución / Materias primas industriales",
-    descripcion: "Distribuidora B2B familiar fundada en 1974. Distribuye materias primas (esencias, aceites esenciales) para industria alimenticia, cosmética y farmacéutica en Guatemala y CA. 201-500 empleados.",
-    porQueFit: "Clientes B2B con crédito = cartera de cobro crítica. CFO AI detecta qué cliente se está atrasando 45 días antes de que sea problema real de caja.",
-    decisor: "Alejandro Macías",
-    cargo: "Gerente General (sucesor familiar del fundador)",
-    linkedin: "https://gt.linkedin.com/in/alejandro-macias-63286683",
-    email: "",
-    mensaje: "Alejandro, te escribo porque estoy lanzando un servicio de inteligencia financiera con IA para distribuidoras guatemaltecas — específicamente para visualizar en tiempo real la cartera de cobro B2B: qué cliente se está atrasando, cuánto flujo entrará en las próximas semanas, cuándo es el riesgo. Creo que aplica bien para DICSA. ¿Me regalás 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "DASA — Droguería Americana S.A.",
-    sector: "Distribución / Farmacéutica y equipos médicos",
-    descripcion: "Distribuidora farmacéutica familiar guatemalteca fundada en 1983. Distribuye a 2,100+ farmacias, 2,800+ médicos y 280+ hospitales. 200+ empleados. 2da generación al mando.",
-    porQueFit: "2,100+ clientes de farmacia = cartera de cobro masiva. Saber qué cliente bajó frecuencia de compra, qué cuenta está en riesgo y cuánto representa del flujo mensual.",
-    decisor: "Jorge Mario Cuéllar",
-    cargo: "Gerente General (hijo del fundador Otoniel Cuéllar)",
-    linkedin: "https://www.linkedin.com/in/jorge-mario-cuellar-dasa-54b54540",
-    email: "",
-    mensaje: "Jorge Mario, te escribo porque estoy lanzando un servicio que ayuda a distribuidoras con carteras grandes a tener visibilidad financiera con IA: qué cliente se está atrasando en pago, cuál bajó su volumen, cuánto flujo real entra en los próximos 13 semanas. Con 2,100 puntos de farmacia, creo que en DASA esto resuelve un dolor real. ¿Hablamos 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "Grupo Distefano",
-    sector: "Retail / Moda Fast Fashion",
-    descripcion: "Cadena de ropa y moda con 27 tiendas en Guatemala (+6 en Honduras/Costa Rica). Fundada en 1979 por Antonio Kozina. Empresa familiar 2da generación. 200-400 empleados.",
-    porQueFit: "27 tiendas propias + franquicias = necesidad urgente de saber cuál tienda rinde, cuál tiene mala rotación de inventario y cómo va el flujo consolidado en tiempo real.",
-    decisor: "Cacho Kozina (Sergio Kozina)",
-    cargo: "Co-Founder & CTO",
-    linkedin: "https://gt.linkedin.com/in/cacho-kozina-b20a4b213",
-    email: "",
-    mensaje: "Cacho, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para cadenas de retail. Básicamente le dás a la dirección un dashboard que muestra cuál de tus 27 tiendas está rindiendo, cuál tiene inventario atascado y cómo va la caja consolidada en tiempo real, sin esperar al cierre del mes. Creo que le vendría bien a Distefano. ¿Hablamos 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "Muebles Victoria / DYMSA",
-    sector: "Manufactura + Retail / Muebles",
-    descripcion: "Empresa familiar guatemalteca fundada en 1971. Sala de ventas 1,500 m² (zona 1) + DYMSA planta fabricación 3,500 m² (1984). Vende al consumidor final y B2B. 50-200 empleados.",
-    porQueFit: "Manufactura propia + retail propio = dos flujos de caja que coordinar. Empresa familiar de 2da/3ra generación sin ERP corporativo visible — caso ideal para CFO AI.",
-    decisor: "Edgar Zamora",
-    cargo: "Gerente de Oficina, DYMSA Group (familia Zamora fundadora)",
-    linkedin: "https://www.linkedin.com/in/edgar-zamora-31a052127",
-    email: "",
-    mensaje: "Edgar, te escribo porque estoy trabajando con empresas que tienen manufactura y venta propia para darles un dashboard financiero con IA: cuánto cuesta producir vs. cuánto entra por ventas, cuándo hay que financiar producción y cuándo la caja va a apretar. Creo que en Muebles Victoria / DYMSA esto tiene mucho sentido. ¿Podés regalarme 30 minutos?",
-    estado: "Pendiente"
-  },
-  {
-    fecha: "2026-05-13",
-    empresa: "Distribuidora Gama",
-    sector: "Distribución / Consumo masivo regional",
-    descripcion: "Distribuidora de consumo masivo (Colgate, Kellogg's, Palmolive) con HQ en Quetzaltenango. Cubre 10 departamentos del occidente de Guatemala. 4,000 m² bodega, flota propia, app Android propia. Fundada 1994.",
-    porQueFit: "10 departamentos = decenas de rutas, cobranzas distribuidas y flujo de caja complejo. Sin un sistema que consolide todo en un dashboard, la dirección va ciega.",
-    decisor: "No identificado",
-    cargo: "Contactar vía distribuidoragama.com por Gerente General",
-    linkedin: "",
-    email: "",
-    mensaje: "Hola, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para distribuidoras regionales — específicamente para empresas que tienen rutas en varios departamentos y necesitan ver en un dashboard cómo va la cobranza por zona, qué clientes se están atrasando y cómo se ve el flujo de las próximas semanas. Creo que aplica bien para Distribuidora Gama. ¿Me regalás 30 minutos?",
-    estado: "Pendiente"
-  }
+  // ============ 2026-05-08 ============
+  {fecha:"2026-05-08",empresa:"Absortex, S.A. (ABX)",sector:"Farmacéutica",descripcion:"Fabricante guatemalteco de productos de higiene y cuidado personal. Distribuidor y manufacturero de insumos farmacéuticos.",porQueFit:"Manufactura farmacéutica guatemalteca, tamaño mediano, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"INGUAMASA / Mayan Gold Macadamia",sector:"Agroindustria",descripcion:"Empresa guatemalteca productora y exportadora de macadamia. Mayan Gold es su marca principal.",porQueFit:"Agroindustria exportadora guatemalteca con múltiples SKUs y ciclos de cobro en divisas.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Industrias ODI, S.A.",sector:"Agroindustria",descripcion:"Empresa guatemalteca de procesamiento agroindustrial y alimentos.",porQueFit:"Agroindustria guatemalteca mediana, productos físicos, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Agroindustrias Albay, S.A.",sector:"Agroindustria",descripcion:"Empresa guatemalteca de agroindustria orientada a granos y productos procesados.",porQueFit:"Empresa familiar agroindustrial con complejidad de inventario y costos de materia prima.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Laboratorios Bonin, S.A.",sector:"Farmacéutica",descripcion:"Laboratorio farmacéutico guatemalteco con larga trayectoria. Fabricante de medicamentos.",porQueFit:"Laboratorio farmacéutico mediano, manufactura física, sin ERP corporativo.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"INFASA (Industria Farmacéutica, S.A.)",sector:"Farmacéutica",descripcion:"Industria Farmacéutica S.A. — laboratorio guatemalteco fabricante de medicamentos.",porQueFit:"Manufactura farmacéutica con múltiples SKUs, complejidad de margen por línea.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Laboratorio Therfam, S.A.",sector:"Farmacéutica",descripcion:"Laboratorio farmacéutico guatemalteco. Produce suplementos y medicamentos de venta libre.",porQueFit:"Laboratorio farmacéutico mediano guatemalteco, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Donovan Werke S.A.",sector:"Farmacéutica",descripcion:"Laboratorio farmacéutico guatemalteco fundado en 1978. Planta de 40,000 m², 350+ empleados. Manufactura de medicamentos con altos estándares.",porQueFit:"Gran laboratorio nacional, 350+ empleados, fundado 1978, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Farcensa",sector:"Farmacéutica",descripcion:"Empresa farmacéutica y de distribución guatemalteca fundada en 1985, 40+ años en el mercado.",porQueFit:"Farmacéutica con 40 años de historia, distribución y manufactura, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Droguería Landívar",sector:"Farmacéutica",descripcion:"Droguería/laboratorio guatemalteco con 50+ años. Certificaciones BPM Norma 32 OMS. Parte del grupo Land Gruppe.",porQueFit:"Laboratorio con 50+ años, certificaciones internacionales, complejidad financiera real.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Prefabricados CIFA",sector:"Construcción",descripcion:"Empresa guatemalteca de prefabricados de concreto fundada en 1957. ~250 empleados, 3ra generación familiar. CEO: Arturo Paiz.",porQueFit:"Empresa familiar de 3ra generación, 65+ años, 250 emp, sin ERP confirmado.",decisor:"Arturo Paiz",cargo:"CEO",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Macizo (FFACSA)",sector:"Construcción",descripcion:"Ferretería y Fábrica de Artículos de Concreto S.A. — 500+ empleados, 8+ plantas, marca Macizo. ⚠️ SAP HANA confirmado.",porQueFit:"DESCALIFICADA: SAP HANA confirmado — incluida en tracker para referencia.",decisor:"—",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"NoFit"},
+  {fecha:"2026-05-08",empresa:"PROMACOSA",sector:"Construcción",descripcion:"Empresa guatemalteca de materiales de construcción fundada en 1987. Planta + 5 salas de venta.",porQueFit:"Manufactura de construcción guatemalteca, múltiples puntos de venta, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-08",empresa:"Famaconsa",sector:"Construcción",descripcion:"Empresa guatemalteca de materiales de construcción, 25+ años, 2 plantas (Chiquimula + Zacapa). Distribuye en oriente del país.",porQueFit:"Manufactura con 2 plantas regionales, 25 años, sin ERP detectado — complejidad operativa ideal para CFO AI.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-09 ============
+  {fecha:"2026-05-09",empresa:"Polindustrias, S.A.",sector:"Manufactura",descripcion:"Empresa guatemalteca de manufactura de plásticos para envases y empaques industriales.",porQueFit:"Manufactura plástica guatemalteca, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-09",empresa:"PPA (Procesos y Productos Alimenticios)",sector:"Alimentos",descripcion:"Empresa guatemalteca de procesamiento de alimentos. Produce alimentos procesados para el mercado local y regional.",porQueFit:"Manufactura alimentaria guatemalteca mediana, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-09",empresa:"Grupo Penva",sector:"Bebidas",descripcion:"Empresa guatemalteca de bebidas y manufactura. Produce bebidas para el mercado centroamericano.",porQueFit:"Manufactura de bebidas con múltiples SKUs y distribución regional, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-09",empresa:"Grupo Econsa / PROQUIMA",sector:"Alimentos",descripcion:"Empresa guatemalteca de ingredientes alimentarios y químicos. PROQUIMA es su línea de productos.",porQueFit:"Ingredientes alimentarios con clientes B2B, ciclos de cobro y control de inventario complejos.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-09",empresa:"Lignum, S.A.",sector:"Construcción",descripcion:"Empresa guatemalteca de madera y materiales de construcción derivados de madera.",porQueFit:"Manufactura maderera con inventario de materia prima, ciclos estacionales, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-10 ============
+  {fecha:"2026-05-10",empresa:"Central America Textiles (Iris Textiles)",sector:"Textil",descripcion:"Empresa guatemalteca de manufactura textil. Fabrica telas y textiles para el mercado regional.",porQueFit:"Manufactura textil guatemalteca, producción orientada a exportación, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-10",empresa:"Fábrica El Zeppelin S.A.",sector:"Textil",descripcion:"Empresa guatemalteca de manufactura textil y retail. Produce ropa con sus propias marcas.",porQueFit:"Manufactura + retail textil, múltiples canales, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-10",empresa:"Elim S.A.",sector:"Textil",descripcion:"Empresa guatemalteca de maquila textil. Producción para clientes internacionales.",porQueFit:"Maquila textil con clientes internacionales, costos por orden y ciclos de cobro complejos.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-10",empresa:"Garesa S.A.",sector:"Distribución",descripcion:"Distribuidora guatemalteca de alimentos. Distribuye productos de consumo masivo a nivel regional.",porQueFit:"Distribución alimentaria con múltiples SKUs, cartera de clientes y rutas, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-10",empresa:"Ninoshka S.A.",sector:"Distribución",descripcion:"Distribuidora guatemalteca de consumo masivo. Distribuye productos a nivel nacional.",porQueFit:"Distribución regional con cartera amplia de clientes y control de cuentas por cobrar crítico.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-11 ============
+  {fecha:"2026-05-11",empresa:"Best Melamine (American Best Melamine, S.A.)",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante de vajillas y utensilios de melamina. Exporta a Centroamérica.",porQueFit:"Manufactura guatemalteca con exportación regional, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-11",empresa:"Plastimax, S.A. (Plásticos Máximos)",sector:"Manufactura",descripcion:"Empresa guatemalteca de envases plásticos. Fabrica empaques para industria alimentaria y de bebidas.",porQueFit:"Manufactura de envases con clientes B2B, inventario de materia prima, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-11",empresa:"Hogartexsa (Hogartex S.A.)",sector:"Manufactura",descripcion:"Empresa guatemalteca de textiles para el hogar. Fabrica sábanas, toallas y productos textiles domésticos.",porQueFit:"Manufactura textil hogar, exportación, múltiples líneas de producto, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-11",empresa:"INDUPLASTIC (Industrias Plásticas de Guatemala, S.A.)",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante de productos plásticos para el hogar y uso industrial.",porQueFit:"Manufactura plástica con líneas industrial y doméstica, sin ERP corporativo detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-11",empresa:"Industria de Jabones Las Palmas, S.A. (Grupo MEME)",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante de jabones y detergentes. Parte del Grupo MEME.",porQueFit:"Manufactura de consumo masivo, distribución amplia, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-11",empresa:"ARMAGUA (Arandelas y Mallas de Guatemala)",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante de arandelas, mallas y productos metalmecánicos.",porQueFit:"Manufactura metalmecánica con clientes B2B industriales, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-12 ============
+  {fecha:"2026-05-12",empresa:"Tostaduría de Café León",sector:"Alimentos",descripcion:"Empresa guatemalteca tostadora y comercializadora de café. Marca León, producción y exportación.",porQueFit:"Tostadora con inventario de café, múltiples clientes B2B y B2C, ciclos de cobro a gestionar.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Agroindustria Legumex / Tierra Fría",sector:"Agroindustria",descripcion:"Empresa guatemalteca de procesamiento de legumbres y vegetales. Marca Tierra Fría.",porQueFit:"Agroindustria con productos perecederos, clientes B2B, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Chocolates Granada (Lorenesi y Cía.)",sector:"Alimentos",descripcion:"Empresa guatemalteca fabricante de chocolates y confitería. Más de 80 años de historia.",porQueFit:"Manufactura de chocolates, empresa familiar de larga data, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"FRUTESA (Frutas Tropicales de Guatemala)",sector:"Agroindustria",descripcion:"Empresa guatemalteca de procesamiento y exportación de frutas tropicales.",porQueFit:"Exportadora de frutas, ciclos estacionales, cuentas por cobrar en divisas, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Guatemala Real Café",sector:"Agroindustria",descripcion:"Empresa guatemalteca productora y exportadora de café de especialidad.",porQueFit:"Agroindustria cafetalera exportadora, múltiples mercados, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Embutidos Bremen / CAPSA",sector:"Alimentos",descripcion:"Empresa guatemalteca fabricante de embutidos y productos cárnicos. Marca Bremen.",porQueFit:"Manufactura de alimentos con cadena de frío, distribución amplia, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Alimentos Montesol S.A.",sector:"Alimentos",descripcion:"Empresa guatemalteca de manufactura de alimentos procesados para consumo masivo.",porQueFit:"Alimentos procesados guatemalteco, distribución regional, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Industrias Rick's, S.A.",sector:"Alimentos",descripcion:"Empresa guatemalteca fabricante de snacks y frituras. Fundada hace varias décadas, distribución nacional.",porQueFit:"Manufactura de snacks con distribución masiva, inventario de materia prima, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Guandy (Guatemalan Candies, S.A.)",sector:"Alimentos",descripcion:"Empresa guatemalteca fabricante de dulces y confitería. Distribuye a nivel regional.",porQueFit:"Confitería guatemalteca con distribución regional, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Extract S.A. (Naturalmente Esencial)",sector:"Agroindustria",descripcion:"Empresa guatemalteca productora de aceites esenciales y extractos naturales. Exporta.",porQueFit:"Agroindustria de especialidad con exportación, múltiples productos, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Monte de Oro, S.A.",sector:"Agroindustria",descripcion:"Empresa guatemalteca productora y exportadora de cardamomo. Principal productor en la región.",porQueFit:"Exportadora de cardamomo, commodity con volatilidad de precio, ciclos de cobro en divisas.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"CEPASA",sector:"Alimentos",descripcion:"Condimentos, Empaques y Productos Alimenticios S.A. Fabrica condimentos y especias en Guatemala.",porQueFit:"Manufactura de condimentos con múltiples SKUs, clientes B2B, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Trebolac (Amerador S.A.)",sector:"Agroindustria",descripcion:"Empresa guatemalteca de lácteos. Produce leche y derivados bajo la marca Trebolac.",porQueFit:"Lácteos con cadena de frío, múltiples clientes, ciclos de cobro activos, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-12",empresa:"Industrias Melgees Guatemala, S.A.",sector:"Alimentos",descripcion:"Empresa guatemalteca de chocolate industrial. Produce insumos para la industria chocolatera.",porQueFit:"Manufactura industrial B2B con clientes manufactureros, ciclos de cobro complejos.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-13 ============
+  {fecha:"2026-05-13",empresa:"Emporium Guatemala",sector:"Retail",descripcion:"Empresa guatemalteca de retail de moda masculina. Vende ropa y accesorios para hombre.",porQueFit:"Retail de moda con múltiples puntos de venta, inventario y cuentas por cobrar a gestionar.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"Corporación Fátima",sector:"Retail",descripcion:"Empresa guatemalteca de papelería y librería. Múltiples tiendas a nivel nacional.",porQueFit:"Retail de papelería con múltiples locales, inventario amplio, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"DICSA (Distribuidora del Caribe de Guatemala)",sector:"Distribución",descripcion:"Distribuidora guatemalteca de materias primas industriales. Atiende industrias manufactureras.",porQueFit:"Distribución B2B con cartera de clientes industriales, cuentas por cobrar críticas.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"DASA (Droguería Americana S.A.)",sector:"Distribución",descripcion:"Distribuidora guatemalteca de productos farmacéuticos y equipos médicos.",porQueFit:"Distribución farmacéutica con inventario regulado, clientes hospitales/farmacias, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"Grupo Distefano",sector:"Retail",descripcion:"Empresa guatemalteca de retail de moda fast fashion. Múltiples marcas y tiendas.",porQueFit:"Retail moda con múltiples puntos de venta, gestión de inventario estacional.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"Muebles Victoria / DYMSA",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante y retailer de muebles. Producción propia y venta directa.",porQueFit:"Manufactura + retail de muebles, producción bajo pedido y stock, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-13",empresa:"Distribuidora Gama",sector:"Distribución",descripcion:"Distribuidora guatemalteca de consumo masivo con cobertura regional.",porQueFit:"Distribución consumo masivo con rutas regionales, cartera amplia, ciclos de cobro a gestionar.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-14 ============
+  {fecha:"2026-05-14",empresa:"Uniformes de Guatemala (UDG)",sector:"Textil",descripcion:"Empresa guatemalteca fabricante de uniformes y ropa de trabajo. Clientes B2B corporativos.",porQueFit:"Manufactura B2B con órdenes por cliente corporativo, ciclos de cobro, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"Samboro, S.A.",sector:"Construcción",descripcion:"Empresa guatemalteca fabricante de cerámica para construcción. Distribuye a nivel regional.",porQueFit:"Manufactura de cerámica con distribución regional, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"Multitubo, S.A.",sector:"Construcción",descripcion:"Empresa guatemalteca fabricante de tuberías PVC para construcción e infraestructura.",porQueFit:"Manufactura industrial con clientes constructoras y proyectos, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"Global Textiles S.A.",sector:"Textil",descripcion:"Empresa guatemalteca fabricante de telas tejidas para la industria textil y de confección.",porQueFit:"Manufactura textil B2B, insumos para confección, clientes industriales, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"Hilera Textil, S.A.",sector:"Textil",descripcion:"Empresa guatemalteca fabricante de hilaza. Produce insumos para la industria textil.",porQueFit:"Manufactura de hilaza con clientes B2B textiles, inventario de materia prima, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"MEGAPRODUCTOS, S.A.",sector:"Construcción",descripcion:"Empresa guatemalteca de prefabricados de concreto y materiales de construcción.",porQueFit:"Manufactura de prefabricados, clientes constructoras, órdenes por proyecto, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  {fecha:"2026-05-14",empresa:"Pinturas Sega / Químicos Sega, S.A.",sector:"Manufactura",descripcion:"Empresa guatemalteca fabricante de pinturas y productos químicos para construcción.",porQueFit:"Manufactura de pinturas con distribución regional, múltiples SKUs, sin ERP detectado.",decisor:"Ver Project Doc",cargo:"—",linkedin:"",email:"",mensaje:"",estado:"Pendiente"},
+  // ============ 2026-05-15 ============
+  {fecha:"2026-05-15",empresa:"Pharmalat, S.A.",sector:"Farmacéutica",descripcion:"Laboratorio farmacéutico guatemalteco fundado en 1992, Villa Nueva. Produce analgésicos, antibióticos, nutracéuticos y multivitamínicos. 231–444 empleados, operación regional en Centroamérica.",porQueFit:"Manufactura farmacéutica mediana sin ERP detectado. Operación multi-país, complejidad financiera alta. Contacto ideal: Director Financiero Regional.",decisor:"Alejandro Villavicencio",cargo:"Director Financiero Regional (CFO)",linkedin:"https://www.linkedin.com/company/laboratorios-pharmalat",email:"a.villavicencio@pharmalat.net",mensaje:"Alejandro, te escribo porque estoy lanzando un servicio que ayuda a directores financieros en manufactura a tener visibilidad de caja y cartera en tiempo real, no 30 días después. 4 agentes IA que proyectan flujo 13 semanas adelante y detectan cuentas atrasadas antes de que vuelen. Creo que en Pharmalat, con la operación regional, tiene sentido. ¿Me das 30 minutos para mostrártelo?",estado:"Pendiente"},
+  {fecha:"2026-05-15",empresa:"CocoGuate (Conservas y Congelados Ya Está, S.A.)",sector:"Agroindustria",descripcion:"Empresa guatemalteca exportadora fundada en 1982. Exporta frutas y vegetales en conserva, congelados y pulpas a EE.UU., México, Europa. 481 empleados, ~USD 26.5M ventas. 56,000 cajas/semana.",porQueFit:"Exportadora independiente guatemalteca, 96% producción a 4 mercados, cuentas por cobrar en USD, productos perecederos. Sin ERP corporativo. CEO identificado en LinkedIn.",decisor:"Francisco José Menéndez Pérez",cargo:"CEO",linkedin:"https://www.linkedin.com/in/francisco-jos%C3%A9-men%C3%A9ndez-17949327/",email:"fjmenendez@cocoguate.com",mensaje:"Francisco José, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para empresas exportadoras. Para CocoGuate — 56,000 cajas por semana, 4 mercados, cuentas por cobrar en USD y producto perecedero — saber en tiempo real qué clientes se están atrasando y cómo afecta el flujo vale mucho. ¿Me das una reunión de 30 minutos para enseñártelo?",estado:"Pendiente"},
+  {fecha:"2026-05-15",empresa:"CORPACAM — Hierro del Rayo (Aceros Suárez, S.A.)",sector:"Manufactura",descripcion:"Primera fábrica de varilla de acero en Guatemala, fundada 1960 por Humberto Suárez Valdez. 2da generación (Elizabeth Suárez desde 1992). 201–500 empleados. Plantas en Zona 12 GT, Escuintla y Honduras.",porQueFit:"65 años empresa familiar 2da gen, acero con volatilidad de chatarra, múltiples plantas, sin ERP detectado. Presidenta gremio ACEFAD — perfil de alta decisión.",decisor:"Elizabeth Suárez Alarcón",cargo:"Gerente General / Presidenta ACEFAD",linkedin:"https://www.linkedin.com/company/corporaci-n-acerera-centroamericana-s-a-corpacam",email:"contacto@hierrodelrayo.com",mensaje:"Elizabeth, te escribo porque estoy lanzando un servicio que ayuda a gerentes de empresas industriales a anticipar problemas de flujo y margen antes de que lleguen al estado financiero. Con el precio de chatarra tan volátil y producción en dos países, el timing de esa información cambia decisiones. Creo que en CORPACAM podría tener sentido. ¿Me das 30 minutos?",estado:"Pendiente"},
+  {fecha:"2026-05-15",empresa:"Pharmadel, S.A.",sector:"Farmacéutica",descripcion:"Laboratorio farmacéutico guatemalteco fundado en 1992, San Lucas Sacatepéquez. 3 plantas bajo BPM-OMS, 184+ medicamentos. Maquila farmacéutica para terceros y marcas propias. ~50–200 empleados.",porQueFit:"Manufactura farmacéutica con 184+ SKUs y maquila. Sin ERP detectado. Empresa familiar (padre GM + hijo Dir. Comercial) con pain point de control de margen por SKU y cartera de maquila.",decisor:"Géovanni de León Maldonado (alt) / Héctor de León (GM primario)",cargo:"Director Comercial / Fundador y GM",linkedin:"Buscar: 'Geovanni de León Maldonado Pharmadel Guatemala' en LinkedIn",email:"no encontrado vía web pública",mensaje:"Géovanni, te escribo porque estoy lanzando un servicio para manufactura farmacéutica: 4 agentes IA que te dicen en tiempo real qué SKUs dejan margen real y cuáles consumen caja. Con 184+ productos y 3 plantas, ese análisis hecho en Excel tarda semanas. Creo que en Pharmadel les podría funcionar. ¿Me das 30 minutos, idealmente con Héctor?",estado:"Pendiente"},
+  {fecha:"2026-05-15",empresa:"Molinos Central-Helvetia (Grupo Centia)",sector:"Manufactura",descripcion:"Harinera guatemalteca formada en 2003 (100+ años historia combinada de 2 molinos). Produce harinas, premezclas, sémolas, pastas y galletas. ~273 empleados, Ciudad de Guatemala.",porQueFit:"Harinera con inputs de trigo importado (exposición a tipo de cambio y commodities), múltiples líneas con márgenes distintos. Sin ERP detectado. C-level no encontrado; contacto alternativo disponible.",decisor:"C-level no encontrado. Alternativo: Fernando Lara Beber",cargo:"Gerente de Comercialización",linkedin:"no encontrado vía web pública",email:"f.larabeber@molinoscentia.com",mensaje:"Fernando, te escribo porque estoy lanzando un servicio de inteligencia financiera con IA para empresas de manufactura de alimentos. En una harinera como Centia, donde el costo del trigo importado varía semana a semana y cada línea tiene márgenes distintos, esa visibilidad en tiempo real cambia decisiones. ¿Me das 30 minutos para enseñártelo?",estado:"Pendiente"},
+  {fecha:"2026-05-15",empresa:"CAGTEX (Central America Garment and Textiles)",sector:"Textil",descripcion:"Empresa de manufactura textil guatemalteca, 35+ años de experiencia. 280 empleados, empresa familiar. Produce ropa y textiles orientados a exportación. Ciudad de Guatemala.",porQueFit:"Textil familiar con 280 emp y 35 años, exportación, costos por orden complejos. Sin ERP detectado. C-level no encontrado públicamente; contacto alternativo disponible.",decisor:"C-level no encontrado. Alternativo: Annette Linares",cargo:"Manager",linkedin:"Buscar: 'Annette Linares CAGTEX Guatemala' en LinkedIn",email:"no encontrado vía web pública",mensaje:"Annette, te escribo porque estoy lanzando un servicio de visibilidad financiera con IA para empresas de manufactura textil. En CAGTEX, con producción de exportación y órdenes de cliente internacional, controlar costos por orden y ciclos de cobro en tiempo real marca diferencia. Creo que podría funcionar. ¿Me das 30 minutos para enseñártelo?",estado:"Pendiente"}
 ];
 
-// ─── Estado dinámico (en memoria, no persiste entre visitas) ───
-const estadoMap = {};
+// SECTOR COLORS
+const SECTOR_COLORS = {
+  'Farmacéutica': '#7c3aed',
+  'Agroindustria': '#15803d',
+  'Manufactura': '#b45309',
+  'Retail': '#0369a1',
+  'Distribución': '#6d28d9',
+  'Textil': '#be185d',
+  'Construcción': '#dc2626',
+  'Alimentos': '#ca8a04',
+  'Bebidas': '#0891b2',
+  'default': '#374151'
+};
 
-function getEstado(empresa) {
-  return estadoMap[empresa] || PROSPECTS.find(p => p.empresa === empresa)?.estado || 'Pendiente';
-}
-
-function formatFecha(str) {
-  if (!str) return '';
-  const [y, m, d] = str.split('-');
-  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
+function getSectorColor(sector) {
+  for (const [key, color] of Object.entries(SECTOR_COLORS)) {
+    if (sector && sector.includes(key)) return color;
+  }
+  return SECTOR_COLORS.default;
 }
 
 function getEstadoClass(estado) {
   if (!estado) return 'estado-default';
-  const e = estado.toLowerCase();
-  if (e.includes('pendiente')) return 'estado-Pendiente';
-  if (e.includes('contactado')) return 'estado-Contactado';
-  if (e.includes('nofit') || e.includes('no fit')) return 'estado-NoFit';
-  if (e.includes('meeting')) return 'estado-Meeting';
+  if (estado.toLowerCase().includes('pendiente')) return 'estado-pendiente';
+  if (estado.toLowerCase().includes('contactado')) return 'estado-contactado';
+  if (estado.toLowerCase().includes('nofit') || estado.toLowerCase().includes('no fit')) return 'estado-nofit';
   return 'estado-default';
 }
 
-function renderCard(p) {
-  const estado = getEstado(p.empresa);
-  const li = p.linkedin && p.linkedin.startsWith('http') ? p.linkedin : null;
-  const liBtn = li ? `<a class="link-btn link-linkedin" href="${li}" target="_blank">💼 LinkedIn</a>` : '';
-  const webDomain = p.empresa.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
-
-  return `
-  <article class="card" data-empresa="${p.empresa}" data-sector="${p.sector}">
-    <div class="card-header">
-      <div class="card-meta">
-        <span class="badge-sector">${p.sector.split('/')[0].trim()}</span>
-        <span class="badge-fecha">${formatFecha(p.fecha)}</span>
-      </div>
-      <h2>${p.empresa}</h2>
-    </div>
-    <div class="card-body">
-      <p class="card-desc">${p.descripcion}</p>
-      <div class="fit-box">
-        <div class="fit-label">Por qué fit</div>
-        ${p.porQueFit}
-      </div>
-      <div class="decisor-block">
-        <div class="decisor-label">Decisor</div>
-        <div class="decisor-name">${p.decisor}</div>
-        <div class="decisor-cargo">${p.cargo}</div>
-        <div class="decisor-links">
-          ${liBtn}
-          ${!li ? '<span class="no-link">LinkedIn no encontrado</span>' : ''}
-        </div>
-      </div>
-      <div class="mensaje-block">
-        <div class="mensaje-toggle" onclick="toggleMsg(this)">
-          <span class="toggle-arrow">▶</span> Ver mensaje personalizado
-        </div>
-        <div class="mensaje-text">
-          <button class="copy-btn" onclick="copyMsg(this)">Copiar</button>
-          ${p.mensaje}
-        </div>
-      </div>
-    </div>
-    <div class="estado-row">
-      <span class="estado-badge ${getEstadoClass(estado)}">${estado}</span>
-      <span class="card-date-small">${formatFecha(p.fecha)}</span>
-    </div>
-  </article>`;
-}
-
-function toggleMsg(el) {
-  const arrow = el.querySelector('.toggle-arrow');
-  const txt = el.nextElementSibling;
-  txt.classList.toggle('open');
-  arrow.textContent = txt.classList.contains('open') ? '▼' : '▶';
-}
-
-function copyMsg(btn) {
-  const txt = btn.parentElement.textContent.replace('Copiar','').trim();
-  navigator.clipboard.writeText(txt).then(() => {
-    btn.textContent = '✓ Copiado';
-    setTimeout(() => btn.textContent = 'Copiar', 1800);
-  });
-}
-
-// ─── Filtros y búsqueda ───
-let activeFilter = 'all';
+let activeSector = 'all';
 let searchQuery = '';
 
-function getUniqueSectors() {
-  const seen = new Set();
-  return PROSPECTS.map(p => p.sector.split('/')[0].trim()).filter(s => {
-    if (seen.has(s)) return false;
-    seen.add(s); return true;
+function filterSector(sector) {
+  activeSector = sector;
+  document.getElementById('pill-all').classList.toggle('all', sector === 'all');
+  document.getElementById('pill-all').classList.toggle('inactive', sector !== 'all');
+  document.querySelectorAll('.sector-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.sector === sector);
   });
+  renderCards();
 }
 
-function buildFilters() {
-  const container = document.getElementById('filters');
-  const sectors = getUniqueSectors();
-  sectors.forEach(s => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-pill';
-    btn.dataset.filter = s;
-    btn.textContent = s;
-    btn.onclick = () => setFilter(s);
-    container.appendChild(btn);
-  });
+function filterSearch(query) {
+  searchQuery = query.toLowerCase();
+  renderCards();
 }
 
-function setFilter(f) {
-  activeFilter = f;
-  document.querySelectorAll('.filter-pill').forEach(b => {
-    b.classList.toggle('active', b.dataset.filter === f);
-  });
-  renderGrid();
+function buildSectorPills() {
+  const sectors = [...new Set(PROSPECTS.map(p => {
+    const s = p.sector || '';
+    for (const key of Object.keys(SECTOR_COLORS)) {
+      if (s.includes(key)) return key;
+    }
+    return s.split('/')[0].trim();
+  }))].filter(Boolean).sort();
+
+  const container = document.getElementById('sector-pills');
+  container.innerHTML = sectors.map(s =>
+    `<span class="pill sector-pill" data-sector="${s}" onclick="filterSector('${s}')">${s}</span>`
+  ).join('');
+
+  document.getElementById('stat-sectors').textContent = sectors.length;
 }
 
-function renderGrid() {
-  const grid = document.getElementById('grid');
-  const q = searchQuery.toLowerCase();
+function matchesSector(prospect, sector) {
+  if (sector === 'all') return true;
+  return prospect.sector && prospect.sector.includes(sector);
+}
+
+function renderCards() {
+  const grid = document.getElementById('cards-grid');
   const filtered = PROSPECTS.filter(p => {
-    const sectorMatch = activeFilter === 'all' || p.sector.startsWith(activeFilter);
-    const searchMatch = !q ||
-      p.empresa.toLowerCase().includes(q) ||
-      p.sector.toLowerCase().includes(q) ||
-      p.decisor.toLowerCase().includes(q) ||
-      p.descripcion.toLowerCase().includes(q);
-    return sectorMatch && searchMatch;
+    const matchS = matchesSector(p, activeSector);
+    const matchQ = !searchQuery ||
+      (p.empresa && p.empresa.toLowerCase().includes(searchQuery)) ||
+      (p.sector && p.sector.toLowerCase().includes(searchQuery)) ||
+      (p.decisor && p.decisor.toLowerCase().includes(searchQuery));
+    return matchS && matchQ;
   });
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty"><h3>Sin resultados</h3><p>Intenta con otro filtro o búsqueda.</p></div>`;
-  } else {
-    grid.innerHTML = filtered.map(renderCard).join('');
+    grid.innerHTML = `<div class="empty-state"><h3>Sin resultados</h3><p>Prueba con otro filtro o búsqueda.</p></div>`;
+    return;
   }
-  updateStats();
+
+  // Sort by date desc
+  const sorted = [...filtered].sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+  grid.innerHTML = sorted.map((p, i) => {
+    const color = getSectorColor(p.sector);
+    const estadoClass = getEstadoClass(p.estado);
+    const hasLinkedIn = p.linkedin && p.linkedin.startsWith('http');
+    const hasEmail = p.email && p.email.includes('@') && !p.email.includes('no encontrado') && !p.email.includes('Ver ');
+    const hasMensaje = p.mensaje && p.mensaje.length > 10;
+
+    return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-top">
+          <span class="card-fecha">${p.fecha}</span>
+          <span class="card-estado ${estadoClass}">${p.estado || 'Pendiente'}</span>
+        </div>
+        <div class="card-empresa">${p.empresa}</div>
+        <span class="sector-badge" style="background:${color}">${p.sector}</span>
+      </div>
+      <div class="card-body">
+        ${p.descripcion ? `<p class="card-desc">${p.descripcion}</p>` : ''}
+        ${p.porQueFit ? `<div><div class="fit-label">¿Por qué fit?</div><p class="card-fit">${p.porQueFit}</p></div>` : ''}
+        <div class="card-divider"></div>
+        <div class="decisor-block">
+          <span class="decisor-name">${p.decisor || '—'}</span>
+          <span class="decisor-cargo">${p.cargo || ''}</span>
+          <div class="decisor-links">
+            ${hasLinkedIn ? `<a href="${p.linkedin}" target="_blank" class="link-btn link-li">↗ LinkedIn</a>` : `<span class="no-link">LinkedIn: no encontrado</span>`}
+            ${hasEmail ? `<a href="mailto:${p.email.split(' ')[0]}" class="link-btn link-em">✉ Email</a>` : ''}
+          </div>
+        </div>
+        ${hasMensaje ? `
+        <div class="card-divider"></div>
+        <div class="mensaje-block">
+          <div class="mensaje-label">✉ Mensaje listo</div>
+          <p class="mensaje-text">${p.mensaje}</p>
+        </div>
+        <button class="copy-btn" onclick="copyMsg(this, \`${p.mensaje.replace(/`/g,'\\`')}\`)">Copiar mensaje</button>
+        ` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyMsg(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar mensaje'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function updateStats() {
-  const total = PROSPECTS.length;
-  const pendiente = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('pendiente')).length;
-  const contactado = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('contactado')).length;
-  const meeting = PROSPECTS.filter(p => getEstado(p.empresa).toLowerCase().includes('meeting')).length;
-  document.getElementById('count-total').textContent = total;
-  document.getElementById('count-pendiente').textContent = pendiente;
-  document.getElementById('count-contactado').textContent = contactado;
-  document.getElementById('count-meeting').textContent = meeting;
+  document.getElementById('stat-total').textContent = PROSPECTS.length;
+  document.getElementById('stat-pending').textContent = PROSPECTS.filter(p => !p.estado || p.estado === 'Pendiente').length;
+  document.getElementById('stat-contacted').textContent = PROSPECTS.filter(p => p.estado && p.estado.toLowerCase().includes('contactado')).length;
 }
 
-// ─── Init ───
-document.getElementById('search').addEventListener('input', e => {
-  searchQuery = e.target.value;
-  renderGrid();
-});
-
-buildFilters();
-renderGrid();
+// Init
+buildSectorPills();
+updateStats();
+renderCards();
 </script>
 </body>
 </html>
